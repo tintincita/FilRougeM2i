@@ -1,0 +1,1 @@
+module.exports.create = ()=> console.log("user controller")
