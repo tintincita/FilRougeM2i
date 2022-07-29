@@ -9,6 +9,7 @@ const config = require('./utils/config')
 const middleware = require('./utils/middleware')
 
 const cardsRouter = require('./controllers/outlinerCards')
+const documentsRouter = require('./controllers/documents')
 
 logger.info('connecting to', config.MONGO_URI)
 
@@ -29,6 +30,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.use('/api/cards', cardsRouter)
+app.use('/api/documents', documentsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

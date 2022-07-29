@@ -1,10 +1,6 @@
 const mongoose = require('mongoose')
 
 const documentSchema = mongoose.Schema({
-    orderIndex: {
-        type: Number,
-        required: true
-    },
     title : {
         type: String
     },
@@ -30,4 +26,4 @@ documentSchema.set('toJSON', {
     }
   })
 
-module.exports = mongoose.model('Document', cardSchema)
+module.exports = mongoose.model('Document', documentSchema)
