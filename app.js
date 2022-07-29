@@ -8,6 +8,8 @@ const logger = require('./utils/logger')
 const config = require('./utils/config')
 const middleware = require('./utils/middleware')
 
+const cardsRouter = require('./controllers/outlinerCards')
+
 logger.info('connecting to', config.MONGO_URI)
 
 mongoose
@@ -25,6 +27,8 @@ mongoose
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
+
+app.use('/api/cards', cardsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
