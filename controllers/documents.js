@@ -4,12 +4,12 @@ const documents = require('../models/documents')
 const Document = require('../models/documents')
 
 documentsRouter.get('/', async (request, response) => {
-    const documents = await Document.find({})
+    const documents = await Document.find({}).populate('cards')
     response.json(documents)
 })
 
 documentsRouter.get('/:id', async (request, response) => {
-    const document = await Document.findById(request.params.id)
+    const document = await Document.findById(request.params.id).populate('cards')
     if (document) {
         response.json(document)
     } else {

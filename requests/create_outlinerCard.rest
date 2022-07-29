@@ -2,5 +2,6 @@ POST  http://localhost:3001/api/cards
 Content-Type: application/json
 
 {
-    "content": "First card"
+    "content": "Yet another card, after setting docu-card relation, with doc set",
+    "document": "62e3c8a163d8dbb1105a05b5"
 }
