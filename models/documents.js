@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const documentSchema = mongoose.Schema({
-    title : {
+    title: {
         type: String
     },
     cards: [
@@ -20,10 +20,10 @@ const documentSchema = mongoose.Schema({
 
 documentSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id.toString()
-      delete returnedObject._id
-      delete returnedObject.__v
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
     }
-  })
+})
 
 module.exports = mongoose.model('Document', documentSchema)
