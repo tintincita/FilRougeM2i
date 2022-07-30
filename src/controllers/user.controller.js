@@ -4,6 +4,8 @@ const ObjectID = require("mongoose").Types.ObjectId;
 
 /**
  * Create user with POST method from '/api/user/create'.
+ * - Require a request.body.firstName, request.body.lastName, request.body.userName
+ * , request.body.email, request.body.password
  *
  * @param {*} req
  * @param {*} res
@@ -64,7 +66,7 @@ module.exports.getUserByID = (req, res) => {
 
 /**
  * Update user by ID with PUT method from /api/user/:id
- * - Only update user with valid ID
+ * - Only update user with a valid ID
  * - Doesn't create missing parameters (doesn't give any error either)
  *
  * @param {*} req
