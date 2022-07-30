@@ -9,8 +9,8 @@ const config = require("./config");
 const middleware = require("../utils/middleware");
 
 const userRouter = require("../routes/user.routes");
-const cardsRouter = require("../controllers/card.controller");
-const documentsRouter = require("../controllers/document.controller");
+const cardRouter = require("../routes/card.routes");
+const documentRouter = require("../controllers/document.controller");
 
 logger.info("connecting to", config.MONGO_URI);
 
@@ -30,8 +30,8 @@ app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
 
-app.use("/api/card", cardsRouter);
-app.use("/api/document", documentsRouter);
+app.use("/api/card", cardRouter);
+app.use("/api/document", documentRouter);
 app.use("/api/user", userRouter);
 
 app.use(middleware.unknownEndpoint);
