@@ -32,7 +32,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/cards', cardsRouter)
 app.use('/api/documents', documentsRouter)
-app.use('/api/users', userRouter)
+app.use('/api/user', userRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
