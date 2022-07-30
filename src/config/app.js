@@ -4,13 +4,13 @@ require("express-async-errors");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const logger = require("./utils/logger");
-const config = require("./utils/config");
-const middleware = require("./utils/middleware");
+const logger = require("../utils/logger");
+const config = require("./config");
+const middleware = require("../utils/middleware");
 
-const userRouter = require("./routes/user.routes");
-const cardsRouter = require("./controllers/card.controller");
-const documentsRouter = require("./controllers/document.controller");
+const userRouter = require("../routes/user.routes");
+const cardsRouter = require("../controllers/card.controller");
+const documentsRouter = require("../controllers/document.controller");
 
 logger.info("connecting to", config.MONGO_URI);
 
