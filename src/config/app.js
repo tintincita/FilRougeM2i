@@ -1,16 +1,17 @@
 const express = require("express");
-const app = express();
 require("express-async-errors");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const logger = require("../utils/logger");
 const config = require("./config");
-const middleware = require("../utils/middleware");
+const logger = require("../utils/logger");
+const middleware = require("../middlewares/middlewares");
 
 const userRouter = require("../routes/user.routes");
 const cardRouter = require("../routes/card.routes");
 const documentRouter = require("../routes/document.routes");
+
+const app = express();
 
 logger.info("connecting to", config.MONGO_URI);
 
@@ -20,21 +21,20 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    logger.info("connected to db");
+    logger.info("Connected to DB");
   })
   .catch((err) => {
-    logger.error("Error connecting to db", err.message);
+    logger.error("Error connecting to DB", err.message);
   });
 
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
+// app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 app.use("/api/card", cardRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/user", userRouter);
-
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
 
 module.exports = app;
