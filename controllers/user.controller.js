@@ -1,7 +1,8 @@
+const { default: mongoose } = require("mongoose");
 const UserModel = require("../models/user.model");
-const ObjectID=require('mongoose').Types.ObjectId;
+const ObjectID = require("mongoose").Types.ObjectId;
 
-module.exports.create = async (req, res) => {
+module.exports.createUser = async (req, res) => {
   const { firstName, lastName, userName, email, password } = req.body;
   try {
     const user = await UserModel.create({
@@ -9,7 +10,7 @@ module.exports.create = async (req, res) => {
       lastName,
       userName,
       email,
-      password
+      password,
     });
     res.status(201).json({ user: user._id });
   } catch (err) {
@@ -17,21 +18,50 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.getAllUsers = async (req,res)=> {
+module.exports.getAllUsers = async (req, res) => {
   const users = await UserModel.find().select("-password");
   res.status(200).json(users);
 };
 
-module.exports.userInfo= (req,res)=> {
-  if(!ObjectID.isValid(req.params.id)){
+module.exports.getUserByID = (req, res) => {
+  if (!ObjectID.isValid(req.params.id)) {
     return res.status(400).send(`ID unknow : ${req.params.id}`);
   }
-  UserModel .findById(req.params.id, (err,docs)=>{
-    if(!err) {
-      res.send(docs)
-    }
-    else {
+  UserModel.findById(req.params.id, (err, docs) => {
+    if (!err) {
+      res.send(docs);
+    } else {
       console.log(`ID unknow : ${err}`);
     }
   }).select("-password");
-}
+};
+
+module.exports.updateUserByID = async (req, res) => {
+  UserModel.exists({ _id: req.params.id }, async (err, doc) => {
+    if (err) {
+      return res.status(500).send(`ID unknow ${req.params.id}`);
+    } else {
+      try {
+        UserModel.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $set: {
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              userName: req.body.userName,
+              password: req.password,
+              email: req.body.email,
+            },
+          },
+          { runValidators: true, returnDocument:'after' },
+          (err, docs) => {
+            if (!err) return res.send(docs);
+            else return res.status(500).send({ message: err });
+          }
+        );
+      } catch (err) {
+        return res.status(500).json({ message: err });
+      }
+    }
+  });
+};
