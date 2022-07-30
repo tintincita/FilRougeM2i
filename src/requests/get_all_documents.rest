@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/documents
+GET http://localhost:3001/api/document

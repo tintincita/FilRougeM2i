@@ -30,8 +30,8 @@ app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
 
-app.use("/api/cards", cardsRouter);
-app.use("/api/documents", documentsRouter);
+app.use("/api/card", cardsRouter);
+app.use("/api/document", documentsRouter);
 app.use("/api/user", userRouter);
 
 app.use(middleware.unknownEndpoint);
