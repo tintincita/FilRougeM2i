@@ -10,7 +10,7 @@ const middleware = require("../utils/middleware");
 
 const userRouter = require("../routes/user.routes");
 const cardRouter = require("../routes/card.routes");
-const documentRouter = require("../controllers/document.controller");
+const documentRouter = require("../routes/document.routes");
 
 logger.info("connecting to", config.MONGO_URI);
 
