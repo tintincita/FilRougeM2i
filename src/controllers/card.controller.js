@@ -31,32 +31,42 @@ module.exports.getCardByID = async (request, response) => {
   }
 };
 
-// module.exports.createCard = async (request, response) => {
-//   const body = request.body;
+/**
+ * Create a card with POST method from '/api/card/create'.
+ * - Require at least a document.id in request.body.document
+ * - request.body.title and request.body.content can be set at creation
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Created card in JSON
+ */
+module.exports.createCard = async (request, response) => {
+  const body = request.body;
 
-//   let documentRef = "";
+  let documentRef = "";
 
-//   if (body.document) {
-//     documentRef = body.document;
-//   } else {
-//     const newDocument = new Document();
-//     documentRef = newDocument.id;
-//   }
-//   console.log(documentRef);
+  if (body.document) {
+    documentRef = body.document;
+  } else {
+    const newDocument = new Document();
+    documentRef = newDocument.id;
+  }
+  console.log(documentRef);
 
-//   const parentDocument = await Document.findById(documentRef);
-//   console.log(parentDocument);
+  const parentDocument = await Document.findById(documentRef);
+  console.log(parentDocument);
 
-//   const card = new Card({
-//     title: body.title || "",
-//     content: body.content,
-//     document: documentRef,
-//   });
+  const card = new Card({
+    title: body.title || "",
+    content: body.content,
+    document: documentRef,
+  });
 
-//   const savedCard = await card.save();
+  const savedCard = await card.save();
 
-//   parentDocument.cards = parentDocument.cards.concat(savedCard.id);
-//   await parentDocument.save();
+  parentDocument.cards = parentDocument.cards.concat(savedCard.id);
+  await parentDocument.save();
 
-//   response.status(201).json(savedCard);
-// };
+  response.status(201).json(savedCard);
+};
