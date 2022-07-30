@@ -36,6 +36,15 @@ module.exports.getUserByID = (req, res) => {
   }).select("-password");
 };
 
+/**
+ * - only update user with valid ID
+ * - doesn't create missing parameters (doesn't give any error)
+ *
+ *
+ * @param {*} req
+ * @param {*} res
+ * @return updated document in JSON
+ */
 module.exports.updateUserByID = async (req, res) => {
   UserModel.exists({ _id: req.params.id }, async (err, doc) => {
     if (err) {
@@ -53,12 +62,28 @@ module.exports.updateUserByID = async (req, res) => {
               email: req.body.email,
             },
           },
-          { runValidators: true, returnDocument:'after' },
+          { runValidators: true, returnDocument: "after" },
           (err, docs) => {
             if (!err) return res.send(docs);
             else return res.status(500).send({ message: err });
           }
         );
+      } catch (err) {
+        return res.status(500).json({ message: err });
+      }
+    }
+  });
+};
+
+
+module.exports.deleteUserByID = async (req, res) => {
+  UserModel.exists({ _id: req.params.id }, async (err, doc) => {
+    if (err) {
+      return res.status(500).send(`ID unknow ${req.params.id}`);
+    } else {
+      try {
+        await UserModel.deleteOne({ _id: req.params.id }).exec();
+        return res.status(200).json({ message: "Successfully deleted." });
       } catch (err) {
         return res.status(500).json({ message: err });
       }
