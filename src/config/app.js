@@ -27,14 +27,14 @@ mongoose
     logger.error("Error connecting to DB", err.message);
   });
 
-app.use(cors());
-app.use(express.json());
-app.use(middleware.requestLogger);
-// app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
-
 app.use("/api/card", cardRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/user", userRouter);
+
+app.use(cors());
+app.use(express.json());
+app.use(middleware.requestLogger);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 module.exports = app;
