@@ -42,25 +42,14 @@ module.exports.getCardByID = async (request, response) => {
  * @return Created card in JSON
  */
 module.exports.createCard = async (request, response) => {
-  const body = request.body;
+  const {title, content, document} = request.body;
 
-  let documentRef = "";
-
-  if (body.document) {
-    documentRef = body.document;
-  } else {
-    const newDocument = new Document();
-    documentRef = newDocument.id;
-  }
-  console.log(documentRef);
-
-  const parentDocument = await Document.findById(documentRef);
-  console.log(parentDocument);
+  const parentDocument = await Document.findById(document);
 
   const card = new Card({
-    title: body.title || "",
-    content: body.content,
-    document: documentRef,
+    title: title || "",
+    content: content,
+    document: document,
   });
 
   const savedCard = await card.save();

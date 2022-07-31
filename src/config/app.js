@@ -3,13 +3,13 @@ require("express-async-errors");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const config = require("./config");
-const logger = require("../utils/logger");
-const middleware = require("../middlewares/middlewares");
-
 const userRouter = require("../routes/user.routes");
 const cardRouter = require("../routes/card.routes");
 const documentRouter = require("../routes/document.routes");
+
+const config = require("./config");
+const logger = require("../utils/logger");
+const middleware = require("../middlewares/middlewares");
 
 const app = express();
 
@@ -27,12 +27,14 @@ mongoose
     logger.error("Error connecting to DB", err.message);
   });
 
+
+app.use(cors());
+app.use(express.json());
+
 app.use("/api/card", cardRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/user", userRouter);
 
-app.use(cors());
-app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
