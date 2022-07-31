@@ -32,7 +32,7 @@ module.exports.getCardByID = async (request, response) => {
 };
 
 /**
- * Create a card with POST method from '/api/card/create'.
+ * Create a card with POST method from '/api/card '.
  * - Require at least a document.id in request.body.document
  * - request.body.title and request.body.content can be set at creation
  *

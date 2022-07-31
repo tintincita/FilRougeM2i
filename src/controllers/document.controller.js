@@ -32,7 +32,7 @@ module.exports.getDocumentByID = async (request, response) => {
 };
 
 /**
- * Create document with POST method from '/api/document/create'.
+ * Create document with POST method from '/api/document'.
  * - Can create document from empty request.body
  * - document.title can be set from request.body.title
  *
