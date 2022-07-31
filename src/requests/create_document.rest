@@ -2,5 +2,5 @@ POST  http://localhost:3001/api/document
 Content-Type: application/json
 
 {
-    "title": "First doc"
+    "title": "Here's a doc, should be created with a card"
 }

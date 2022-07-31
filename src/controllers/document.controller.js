@@ -1,6 +1,6 @@
-const documents = require("../models/document.model");
-const Document = require("../models/document.model");
 
+const Document = require("../models/document.model");
+const Card = require('../models/card.model')
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -43,12 +43,19 @@ module.exports.getDocumentByID = async (request, response) => {
  */
 module.exports.createDocument = async (request, response) => {
   const body = request.body;
+  console.log(body);
+
+  const firstCard = new Card()
 
   const document = new Document({
     title: body.title || "",
+    cards : [firstCard.id]
   });
 
   const savedDocument = await document.save();
+  firstCard.document = savedDocument.id
+  await firstCard.save()
+
   response.status(201).json(savedDocument);
 };
 
