@@ -3,26 +3,21 @@ const supertest = require('supertest')
 const app = require('../src/config/app')
 
 const Card = require('../src/models/card.model')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
-const initialCards = [
-  {
-    content: 'First card',
-    cardIndex: 1,
-  },
-  {
-    content: 'Second card',
-    cardIndex: 2,
-  },
-]
 
 beforeEach(async () => {
   await Card.deleteMany({})
-  let cardObject = new Card(initialCards[0])
-  await cardObject.save()
-  cardObject = new Card(initialCards[1])
-  await cardObject.save()
+
+  let cardObject = new Card()
+
+  for (let i = 0 ; i < helper.initialCards.length ; i++) {
+    cardObject = new Card(helper.initialCards[i])
+    await cardObject.save()
+  }
+
 })
 
 test('cards are returned as json', async () => {
@@ -32,25 +27,44 @@ test('cards are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('there are two cards', async () => {
+test('all initial cards are loaded', async () => {
   const response = await api.get('/api/card')
 
-  expect(response.body).toHaveLength(initialCards.length)
+  expect(response.body).toHaveLength(helper.initialCards.length)
 })
 
-test('the first card says first', async () => {
-  const response = await api.get('/api/card')
+test('a specific card can be viewed', async () => {
+  const cardsAtStart = await helper.cardsInDb()
 
-  expect(response.body[0].content).toBe('First card')
+  const cardToView = cardsAtStart[0]
+
+  const resultCard = await api
+    .get(`/api/card/${cardToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const processedCardToView = JSON.parse(JSON.stringify(cardToView))
+
+  expect(resultCard.body).toEqual(processedCardToView)
 })
 
-test('a specific card is within the returned cards', async () => {
-  const response = await api.get('/api/card')
+test('a card can be deleted', async () => {
+  const cardsAtStart = await helper.cardsInDb()
+  const cardToDelete = cardsAtStart[0]
 
-  const contents = response.body.map(r => r.content)
-  expect(contents).toContain(
-    'Second card'
+  await api
+    .delete(`/api/card/${cardToDelete.id}`)
+    .expect(204)
+
+  const cardsAtEnd = await helper.cardsInDb()
+
+  expect(cardsAtEnd).toHaveLength(
+    helper.initialCards.length - 1
   )
+
+  const contents = cardsAtEnd.map(r => r.content)
+
+  expect(contents).not.toContain(cardToDelete.content)
 })
 
 

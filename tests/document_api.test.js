@@ -3,24 +3,20 @@ const supertest = require('supertest')
 const app = require('../src/config/app')
 
 const Document = require('../src/models/document.model')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
-const initialDocs = [
-    {
-        title: 'First Doc',
-    },
-    {
-        title: 'Second Doc',
-    },
-]
+
 
 beforeEach(async () => {
     await Document.deleteMany({})
-    let docObject = new Document(initialDocs[0])
-    await docObject.save()
-    docObject = new Document(initialDocs[1])
-    await docObject.save()
+
+    let docObject = new Document()
+    for (let i = 0; i < helper.initialDocs.length; i++) {
+        docObject = new Document(helper.initialDocs[i])
+        await docObject.save()
+    }
 })
 
 test('docs are returned as json', async () => {
@@ -30,27 +26,45 @@ test('docs are returned as json', async () => {
         .expect('Content-Type', /application\/json/)
 })
 
-test('there are two docss', async () => {
+test('all docs are loaded', async () => {
     const response = await api.get('/api/document')
 
-    expect(response.body).toHaveLength(initialDocs.length)
+    expect(response.body).toHaveLength(helper.initialDocs.length)
 })
 
-test('the first doc says first', async () => {
-    const response = await api.get('/api/document')
-    expect(response.body[0].title).toBe('First Doc')
+test('a specific doc can be viewed', async () => {
+    const docsAtStart = await helper.docsInDb()
+
+    const docToView = docsAtStart[0]
+
+    const resultDoc = await api
+        .get(`/api/document/${docToView.id}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const processedDocToView = JSON.parse(JSON.stringify(docToView))
+
+    expect(resultDoc.body).toEqual(processedDocToView)
 })
 
-test('a specific doc is within the returned docs', async () => {
-    const response = await api.get('/api/document')
+test('a doc can be deleted', async () => {
+    const docsAtStart = await helper.docsInDb()
+    const docToDelete = docsAtStart[0]
 
-    const titles = response.body.map(r => r.title)
-    expect(titles).toContain(
-        'Second Doc'
+    await api
+        .delete(`/api/document/${docToDelete.id}`)
+        .expect(204)
+
+    const docsAtEnd = await helper.docsInDb()
+
+    expect(docsAtEnd).toHaveLength(
+        helper.initialDocs.length - 1
     )
+
+    const titles = docsAtEnd.map(r => r.title)
+
+    expect(titles).not.toContain(docToDelete.title)
 })
-
-
 
 afterAll(() => {
     mongoose.connection.close()

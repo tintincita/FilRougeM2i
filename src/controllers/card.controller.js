@@ -60,3 +60,16 @@ console.log(request.body);
 
   response.status(201).json(savedCard);
 };
+/**
+ * Delete card by ID with DELETE method from '/api/card/:id'
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Status 204
+ */
+ module.exports.deleteCardByID = async (request, response) => {
+  const target = request.params.id;
+  await Card.findByIdAndRemove(target);
+  response.status(204).send(`Card deleted : ${target}`);
+};
