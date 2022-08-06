@@ -25,7 +25,7 @@ beforeEach(async () => {
   await cardObject.save()
 })
 
-test('notes are returned as json', async () => {
+test('cards are returned as json', async () => {
   await api
     .get('/api/card')
     .expect(200)
