@@ -2,6 +2,7 @@ POST  http://localhost:3001/api/card
 Content-Type: application/json
 
 {
-    "content": "Second card, created with rest request",
-    "document": "62e64da1d92daaacde6f1084"
+    "content": "new card, hopefully its cardIndex is 3",
+    "document": "62edce2cfd7f57810a012eb7",
+    "cardIndex": 3
 }

@@ -45,11 +45,12 @@ module.exports.createCard = async (request, response) => {
   const {title, content, document} = request.body;
 
   const parentDocument = await Document.findById(document);
-
+console.log(request.body);
   const card = new Card({
     title: title || "",
     content: content,
     document: document,
+    cardIndex: request.body.cardIndex || 1,
   });
 
   const savedCard = await card.save();
