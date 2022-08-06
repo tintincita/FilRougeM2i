@@ -16,13 +16,8 @@ const cardSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card",
     },
-    previousCard: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
-    },
-    nextCard: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
+    cardIndex: {
+      type: Number
     },
   },
   {
