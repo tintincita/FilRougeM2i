@@ -66,6 +66,53 @@ test('a doc can be deleted', async () => {
     expect(titles).not.toContain(docToDelete.title)
 })
 
+test('a valid doc can be added', async () => {
+
+    const newDoc = {
+        title: 'new doc added through POST',
+    }
+
+    await api
+        .post('/api/document')
+        .send(newDoc)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/document')
+
+    const titles = response.body.map(r => r.title)
+
+    expect(response.body).toHaveLength(helper.initialDocs.length + 1)
+    expect(titles).toContain(
+        'new doc added through POST'
+    )
+})
+
+test('a doc can be updated', async () => {
+    const docsAtStart = await helper.docsInDb()
+
+    const docToChange = docsAtStart[0]
+
+    const changesToDoc = {
+        title: 'title is changed through POST',
+    }
+
+    await api
+        .put(`/api/document/${docToChange.id}`)
+        .send(changesToDoc)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/document')
+
+    const titles = response.body.map(r => r.title)
+
+    expect(titles).toContain(
+        'title is changed through POST'
+    )
+})
+
+
 afterAll(() => {
     mongoose.connection.close()
 })

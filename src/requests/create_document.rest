@@ -2,5 +2,5 @@ POST  http://localhost:3001/api/document
 Content-Type: application/json
 
 {
-    "title": "Another new doc using cardIndex field"
+    "title": "Spanking new document"
 }

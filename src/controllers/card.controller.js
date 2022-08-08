@@ -73,3 +73,32 @@ console.log(request.body);
   await Card.findByIdAndRemove(target);
   response.status(204).send(`Card deleted : ${target}`);
 };
+
+/**
+ * Update card with PUT method from '/api/card/:id'
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Status 200
+ */
+ module.exports.updateCardByID = (request, response, next) => {
+  const body = request.body
+
+  const card = {
+    title: body.title,
+    content: body.content,
+    document: body.document,
+    parentCard: body.parentCard,
+    cardIndex: body.cardIndex,
+    cards: body.cards
+  }
+  console.log(request.params.id);
+  Card.findByIdAndUpdate(request.params.id, card, { new: true })
+    .then(updatedCard => {
+      response.json(updatedCard)
+    })
+    .catch(error => next(error))
+
+
+};

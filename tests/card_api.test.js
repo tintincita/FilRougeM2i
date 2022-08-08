@@ -67,7 +67,29 @@ test('a card can be deleted', async () => {
   expect(contents).not.toContain(cardToDelete.content)
 })
 
+test('a card can be updated', async () => {
+  const cardsAtStart = await helper.cardsInDb()
 
+  const cardToChange = cardsAtStart[0]
+
+  const changesToCard = {
+      content: 'title of card is changed through POST',
+  }
+
+  await api
+      .put(`/api/card/${cardToChange.id}`)
+      .send(changesToCard)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/card')
+
+  const contents = response.body.map(r => r.content)
+
+  expect(contents).toContain(
+      'title of card is changed through POST'
+  )
+})
 
 afterAll(() => {
   mongoose.connection.close()

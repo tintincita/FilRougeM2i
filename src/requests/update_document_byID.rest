@@ -1,0 +1,6 @@
+PUT  http://localhost:3001/api/document/62f179bfa806009a79e8a2ed
+Content-Type: application/json
+
+{
+    "title": "making changes, the legend"
+}
