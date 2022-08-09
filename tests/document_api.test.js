@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../src/config/app')
 
 const Document = require('../src/models/document.model')
+const Card = require('../src/models/card.model')
+
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -88,10 +90,11 @@ test('a valid doc can be added', async () => {
     )
 })
 
-test('a doc can be updated', async () => {
+
+test('a doc title can be updated', async () => {
     const docsAtStart = await helper.docsInDb()
 
-    const docToChange = docsAtStart[0]
+    const docToChange = new Document(docsAtStart[0])
 
     const changesToDoc = {
         title: 'title is changed through POST',
@@ -110,6 +113,48 @@ test('a doc can be updated', async () => {
     expect(titles).toContain(
         'title is changed through POST'
     )
+})
+describe('cards can be moved within doc', () => {
+
+    beforeEach(async () => {
+        await Card.deleteMany({})
+
+        const docsAtStart = await helper.docsInDb()
+        const docToChange = docsAtStart[0]
+        const cardArray = []
+
+        let cardObject = new Card()
+        for (let i = 0; i < helper.initialCards.length; i++) {
+            cardObject = new Card(helper.initialCards[i])
+            cardObject.document = docToChange.id
+            cardArray.push(cardObject.id)
+            await cardObject.save()
+        }
+        docToChange.cards = cardArray
+
+        await api
+            .put(`/api/document/${docToChange.id}`)
+            .send(docToChange)
+    })
+
+    test('change order of cards', async () => {
+        const docsAtStart = await helper.docsInDb()
+        const docToChange = docsAtStart[0]
+        const originalArray = docToChange.cards;
+        const newArray = [originalArray[1], originalArray[2], originalArray[0]]
+        docToChange.cards = newArray
+
+        await api
+            .put(`/api/document/${docToChange.id}`)
+            .send(docToChange)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const docsAtEnd = await helper.docsInDb()
+
+        expect(docsAtStart.length).toBe(docsAtEnd.length)
+        expect(docsAtEnd[0].cards).toStrictEqual(newArray)
+    })
 })
 
 

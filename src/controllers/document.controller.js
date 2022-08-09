@@ -89,7 +89,7 @@ module.exports.updateDocumentByID = (request, response, next) => {
     parentSpace: body.parentSpace,
     cards: body.cards
   }
-  console.log(request.params.id);
+  
   Document.findByIdAndUpdate(request.params.id, document, { new: true })
     .then(updatedDocument => {
       response.json(updatedDocument)
