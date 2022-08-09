@@ -2,5 +2,6 @@ PUT  http://localhost:3001/api/document/62f179bfa806009a79e8a2ed
 Content-Type: application/json
 
 {
-    "title": "making changes, the legend"
+    "title": "life's a miracle",
+    "cards": ["62f24b0eec9336b251917a12", "62f24b48ec9336b251917a1a", "62f24b35ec9336b251917a16"]
 }

@@ -16,9 +16,6 @@ const cardSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card",
     },
-    cardIndex: {
-      type: Number
-    },
   },
   {
     timestamps: true,

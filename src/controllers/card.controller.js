@@ -50,7 +50,7 @@ console.log(request.body);
     title: title || "",
     content: content,
     document: document,
-    cardIndex: request.body.cardIndex || 1,
+    parentCard: parentCard
   });
 
   const savedCard = await card.save();
@@ -93,7 +93,7 @@ console.log(request.body);
     cardIndex: body.cardIndex,
     cards: body.cards
   }
-  console.log(request.params.id);
+  
   Card.findByIdAndUpdate(request.params.id, card, { new: true })
     .then(updatedCard => {
       response.json(updatedCard)

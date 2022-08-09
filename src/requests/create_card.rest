@@ -2,7 +2,6 @@ POST  http://localhost:3001/api/card
 Content-Type: application/json
 
 {
-    "content": "new card, hopefully its cardIndex is 5",
-    "document": "62f179bfa806009a79e8a2ed",
-    "cardIndex": 5
+    "content": "a card to test nesting C",
+    "document": "62f24ae6fa61871b80c6159c"
 }

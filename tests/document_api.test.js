@@ -94,10 +94,10 @@ test('a valid doc can be added', async () => {
 test('a doc title can be updated', async () => {
     const docsAtStart = await helper.docsInDb()
 
-    const docToChange = new Document(docsAtStart[0])
+    const docToChange = docsAtStart[0]
 
     const changesToDoc = {
-        title: 'title is changed through POST',
+        title: "title is changed through POST",
     }
 
     await api
@@ -107,13 +107,13 @@ test('a doc title can be updated', async () => {
         .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/document')
-
     const titles = response.body.map(r => r.title)
 
     expect(titles).toContain(
         'title is changed through POST'
     )
 })
+
 describe('cards can be moved within doc', () => {
 
     beforeEach(async () => {
@@ -137,7 +137,7 @@ describe('cards can be moved within doc', () => {
             .send(docToChange)
     })
 
-    test('change order of cards', async () => {
+    test('change order', async () => {
         const docsAtStart = await helper.docsInDb()
         const docToChange = docsAtStart[0]
         const originalArray = docToChange.cards;
@@ -155,6 +155,25 @@ describe('cards can be moved within doc', () => {
         expect(docsAtStart.length).toBe(docsAtEnd.length)
         expect(docsAtEnd[0].cards).toStrictEqual(newArray)
     })
+
+    // test('nest/group', async () => {
+    //     const docsAtStart = await helper.docsInDb()
+    //     const docToChange = docsAtStart[0]
+    //     const originalArray = docToChange.cards;
+    //     const newArray = [originalArray[1], originalArray[2], originalArray[0]]
+    //     docToChange.cards = newArray
+
+    //     await api
+    //         .put(`/api/document/${docToChange.id}`)
+    //         .send(docToChange)
+    //         .expect(200)
+    //         .expect('Content-Type', /application\/json/)
+
+    //     const docsAtEnd = await helper.docsInDb()
+
+    //     expect(docsAtStart.length).toBe(docsAtEnd.length)
+    //     expect(docsAtEnd[0].cards).toStrictEqual(newArray)
+    // })
 })
 
 
