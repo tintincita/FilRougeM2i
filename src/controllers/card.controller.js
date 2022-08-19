@@ -49,8 +49,7 @@ console.log(request.body);
   const card = new Card({
     title: title || "",
     content: content,
-    document: document,
-    parentCard: parentCard
+    document: document
   });
 
   const savedCard = await card.save();

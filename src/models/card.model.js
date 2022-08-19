@@ -12,10 +12,6 @@ const cardSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
     },
-    parentCard: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
-    },
   },
   {
     timestamps: true,
