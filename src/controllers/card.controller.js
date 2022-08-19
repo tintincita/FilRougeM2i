@@ -47,7 +47,7 @@ module.exports.createCard = async (request, response) => {
   const parentDocument = await Document.findById(document);
 console.log(request.body);
   const card = new Card({
-    title: title || "",
+    title: title,
     content: content,
     document: document
   });

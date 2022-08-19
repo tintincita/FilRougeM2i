@@ -1,0 +1,1 @@
+DELETE http://localhost:3001/api/group/62ff9a09ad8a0899fd9

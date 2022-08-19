@@ -1,6 +1,7 @@
 
 const Document = require("../models/document.model");
 const Card = require('../models/card.model')
+const Group = require('../models/group.model')
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -10,7 +11,7 @@ const Card = require('../models/card.model')
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find({}).populate("cards");
+  const documents = await Document.find({}).populate('Card' | 'Group');
   response.json(documents);
 };
 
@@ -23,7 +24,7 @@ module.exports.getAllDocuments = async (request, response) => {
  * @return Document in JSON
  */
 module.exports.getDocumentByID = async (request, response) => {
-  const document = await Document.findById(request.params.id).populate("cards");
+  const document = await Document.findById(request.params.id);
   if (document) {
     response.json(document);
   } else {

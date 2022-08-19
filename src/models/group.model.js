@@ -1,22 +1,20 @@
 const mongoose = require("mongoose");
 
-const documentSchema = mongoose.Schema({
-  title: {
-    type: String,
-  },
-  cards: [
-    {
+const groupSchema = mongoose.Schema(
+  {
+    contains: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card" | "Group",
+    }],
+    document: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Document",
     },
-  ],
-  parentSpace: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Document",
-  },
-});
+    
+  }
+);
 
-documentSchema.set("toJSON", {
+groupSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -24,4 +22,4 @@ documentSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Document", documentSchema);
+module.exports = mongoose.model("Group", groupSchema);
