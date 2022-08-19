@@ -1,0 +1,6 @@
+PUT  http://localhost:3001/api/card/62f17bc9395f4b7b22ca4f15
+Content-Type: application/json
+
+{
+    "title": "making changes again"
+}

@@ -49,7 +49,7 @@ module.exports.createDocument = async (request, response) => {
 
   const document = new Document({
     title: body.title || "",
-    cards : [firstCard.id]
+    cards: [firstCard.id]
   });
 
   const savedDocument = await document.save();
@@ -71,4 +71,30 @@ module.exports.deleteDocumentByID = async (request, response) => {
   const target = request.params.id;
   await Document.findByIdAndRemove(target);
   response.status(204).send(`Document deleted : ${target}`);
+};
+
+/**
+ * Update document with PUT method from '/api/document/:id'
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Status 200
+ */
+module.exports.updateDocumentByID = (request, response, next) => {
+  const body = request.body
+
+  const document = {
+    title: body.title,
+    parentSpace: body.parentSpace,
+    cards: body.cards
+  }
+  
+  Document.findByIdAndUpdate(request.params.id, document, { new: true })
+    .then(updatedDocument => {
+      response.json(updatedDocument)
+    })
+    .catch(error => next(error))
+
+
 };

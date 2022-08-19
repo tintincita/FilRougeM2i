@@ -50,7 +50,7 @@ console.log(request.body);
     title: title || "",
     content: content,
     document: document,
-    cardIndex: request.body.cardIndex || 1,
+    parentCard: parentCard
   });
 
   const savedCard = await card.save();
@@ -59,4 +59,46 @@ console.log(request.body);
   await parentDocument.save();
 
   response.status(201).json(savedCard);
+};
+/**
+ * Delete card by ID with DELETE method from '/api/card/:id'
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Status 204
+ */
+ module.exports.deleteCardByID = async (request, response) => {
+  const target = request.params.id;
+  await Card.findByIdAndRemove(target);
+  response.status(204).send(`Card deleted : ${target}`);
+};
+
+/**
+ * Update card with PUT method from '/api/card/:id'
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @return Status 200
+ */
+ module.exports.updateCardByID = (request, response, next) => {
+  const body = request.body
+
+  const card = {
+    title: body.title,
+    content: body.content,
+    document: body.document,
+    parentCard: body.parentCard,
+    cardIndex: body.cardIndex,
+    cards: body.cards
+  }
+  
+  Card.findByIdAndUpdate(request.params.id, card, { new: true })
+    .then(updatedCard => {
+      response.json(updatedCard)
+    })
+    .catch(error => next(error))
+
+
 };
