@@ -70,6 +70,7 @@ console.log(request.body);
  module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   await Card.findByIdAndRemove(target);
+  await Document.updateOne({ cards: target }, { $pull: { cards: target } });
   response.status(204).send(`Card deleted : ${target}`);
 };
 
