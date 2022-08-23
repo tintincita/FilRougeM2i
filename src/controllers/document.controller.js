@@ -1,6 +1,5 @@
-
 const Document = require("../models/document.model");
-const Card = require('../models/card.model')
+const Card = require("../models/card.model");
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -10,7 +9,7 @@ const Card = require('../models/card.model')
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find({}).populate("cards");
+  const documents = await Document.find().populate("cards");
   response.json(documents);
 };
 
@@ -45,16 +44,12 @@ module.exports.createDocument = async (request, response) => {
   const body = request.body;
   console.log(body);
 
-  const firstCard = new Card()
-
   const document = new Document({
     title: body.title || "",
-    cards: [firstCard.id]
+    cards: [],
   });
 
   const savedDocument = await document.save();
-  firstCard.document = savedDocument.id
-  await firstCard.save()
 
   response.status(201).json(savedDocument);
 };
@@ -82,19 +77,17 @@ module.exports.deleteDocumentByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateDocumentByID = (request, response, next) => {
-  const body = request.body
+  const body = request.body;
 
   const document = {
     title: body.title,
     parentSpace: body.parentSpace,
-    cards: body.cards
-  }
-  
+    cards: body.cards,
+  };
+
   Document.findByIdAndUpdate(request.params.id, document, { new: true })
-    .then(updatedDocument => {
-      response.json(updatedDocument)
+    .then((updatedDocument) => {
+      response.json(updatedDocument);
     })
-    .catch(error => next(error))
-
-
+    .catch((error) => next(error));
 };
