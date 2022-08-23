@@ -45,19 +45,25 @@ module.exports.createCard = async (request, response) => {
   const { title, content, document } = request.body;
 
   const parentDocument = await Document.findById(document);
-  console.log(request.body);
-  const card = new Card({
-    title: title || "titre",
-    content: content || "contenu",
-    document: document,
-  });
 
-  const savedCard = await card.save();
-
-  parentDocument.cards = parentDocument.cards.concat(savedCard.id);
-  await parentDocument.save();
-
-  response.status(201).json(savedCard);
+  if(parentDocument) {
+    console.log(request.body);
+    const card = new Card({
+      title: title || "titre",
+      content: content || "contenu",
+      document: document,
+    });
+  
+    const savedCard = await card.save();
+  
+    parentDocument.cards = parentDocument.cards.concat(savedCard.id);
+    await parentDocument.save();
+  
+    response.status(201).json(savedCard);
+  } else {
+    response.status(400);
+    throw 'Missing document, cannot create orphan card';
+  }
 };
 /**
  * Delete card by ID with DELETE method from '/api/card/:id'
