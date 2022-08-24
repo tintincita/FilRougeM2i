@@ -52,6 +52,7 @@ module.exports.createCard = async (request, response) => {
       title: title || "titre",
       content: content || "contenu",
       document: document,
+      group: group,
     });
 
     const savedCard = await card.save();
@@ -60,6 +61,9 @@ module.exports.createCard = async (request, response) => {
       savedCard.id
     );
     parentDocument.editorCards = parentDocument.editorCards.concat(
+      savedCard.id
+    );
+    parentDocument.cardsAndGroups = parentDocument.cardsAndGroups.concat(
       savedCard.id
     );
     await parentDocument.save();
@@ -82,9 +86,11 @@ module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   await Card.findByIdAndRemove(target);
   await Document.updateOne(
-    { outlinerCards: target, editorCards: target },
-    { $pull: { outlinerCards: target, editorCards: target } }
+    { outlinerCards: target, editorCards: target, cardsAndGroups: target },
+    { $pull: { outlinerCards: target, editorCards: target, cardsAndGroups: target } }
   );
+  await Group.updateOne({contains: target}, {$pull: { contains: target}});
+
   response.status(204).send(`Card deleted : ${target}`);
 };
 
@@ -103,10 +109,9 @@ module.exports.updateCardByID = (request, response, next) => {
     title: body.title,
     content: body.content,
     document: body.document,
-    parentCard: body.parentCard,
-    cardIndex: body.cardIndex,
     outlinerCards: body.cards,
     editorCards: body.cards,
+    cardsAndGroups: body.cards,
   };
 
   Card.findByIdAndUpdate(request.params.id, card, { new: true })

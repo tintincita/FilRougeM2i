@@ -106,5 +106,6 @@ test('a card can be updated', async () => {
 })
 
 afterAll(() => {
+  Card.deleteMany({});
   mongoose.connection.close()
 })

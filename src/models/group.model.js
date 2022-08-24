@@ -10,7 +10,7 @@ const groupSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
     },
-    
+    indentation: [Number],
   }
 );
 
