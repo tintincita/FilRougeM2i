@@ -11,7 +11,7 @@ const Group = require('../models/group.model')
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find({}).populate('Card' | 'Group');
+  const documents = await Document.find({}).populate("cards");
   response.json(documents);
 };
 
@@ -88,7 +88,8 @@ module.exports.updateDocumentByID = (request, response, next) => {
   const document = {
     title: body.title,
     parentSpace: body.parentSpace,
-    cards: body.cards
+    cards: body.cards,
+    cardsAndGroups: body.cardsAndGroups
   }
   
   Document.findByIdAndUpdate(request.params.id, document, { new: true })

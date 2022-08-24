@@ -27,6 +27,20 @@ test('cards are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+test('malformatted id returns error', async () => {
+  await api
+    .get('/api/card/88')
+    .expect(400)
+})
+
+test('unexisting id returns error', async () => {
+  let id = helper.nonExistingCardId();
+  await api
+    .get(`/api/card/${id}`)
+    .expect(400)
+})
+
+
 test('all initial cards are loaded', async () => {
   const response = await api.get('/api/card')
 

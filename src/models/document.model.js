@@ -7,6 +7,12 @@ const documentSchema = mongoose.Schema({
   cards: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Card",
+    },
+  ],
+  cardsAndGroups: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Card" | "Group",
     },
   ],

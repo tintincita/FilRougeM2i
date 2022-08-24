@@ -12,6 +12,10 @@ const cardSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
     },
+    group: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+    }
   },
   {
     timestamps: true,

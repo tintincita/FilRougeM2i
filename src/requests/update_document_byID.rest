@@ -1,7 +1,8 @@
-PUT  http://localhost:3001/api/document/62f179bfa806009a79e8a2ed
+PUT  http://localhost:3001/api/document/6304e7653bec42199cea6651
 Content-Type: application/json
 
 {
-    "title": "life's a miracle",
-    "cards": ["62f24b0eec9336b251917a12", "62f24b48ec9336b251917a1a", "62f24b35ec9336b251917a16"]
+    "cardsAndGroups": ["6305d77169732ad0d333f1a3", "6304e767bb9bdd06c7e1570b"],
+    "title": "one doc to keep them all",
+    "cards": ["6304e767bb9bdd06c7e15707", "6304e767bb9bdd06c7e15709", "6304e767bb9bdd06c7e1570b"]
 }

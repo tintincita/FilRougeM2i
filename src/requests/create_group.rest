@@ -2,5 +2,6 @@ POST  http://localhost:3001/api/group
 Content-Type: application/json
 
 {
-    "document": "62ff81c2cda76846a17cb52d"
+    "contains": ["6304e767bb9bdd06c7e15707", "6304e767bb9bdd06c7e15709"],
+    "document": "6304e767bb9bdd06c7e1570b"
 }

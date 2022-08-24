@@ -1,8 +1,9 @@
 const Group = require("../models/group.model");
+const Card = require("../models/card.model");
 const Document = require("../models/document.model");
 
 /**
- * Get all groups with GET method from '/api/group'.
+ * Get all Groups with GET method from '/api/group'.
  *
  * @param {*} request
  * @param {*} response
@@ -52,8 +53,8 @@ module.exports.createGroup = async (request, response) => {
 
     const savedGroup = await group.save();
 
-    parentDocument.cards = parentDocument.cards.concat(savedGroup.id);
-    await parentDocument.save();
+    // console.log(parentDocument.cardsAndGroups);
+    // await parentDocument.save();
 
     response.status(201).json(savedGroup);
 };
@@ -68,6 +69,7 @@ module.exports.createGroup = async (request, response) => {
 module.exports.deleteGroupByID = async (request, response) => {
     const target = request.params.id;
     await Group.findByIdAndRemove(target);
+    // await Document.updateOne({ cards: target}, {$pull: { cards: target}});
     response.status(204).send(`Group deleted : ${target}`);
 };
 
