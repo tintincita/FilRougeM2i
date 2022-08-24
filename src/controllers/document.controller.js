@@ -22,10 +22,7 @@ module.exports.getAllDocuments = async (request, response) => {
  * @return Document in JSON
  */
 module.exports.getDocumentByID = async (request, response) => {
-  const document = await Document.findById(request.params.id).populate(
-    "outlinerCards",
-    "editorCards"
-  );
+  const document = await Document.findById(request.params.id).populate("outlinerCards").populate("editorCards");
   if (document) {
     response.json(document);
   } else {
