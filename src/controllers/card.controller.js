@@ -56,7 +56,12 @@ module.exports.createCard = async (request, response) => {
 
     const savedCard = await card.save();
 
-    parentDocument.cards = parentDocument.cards.concat(savedCard.id);
+    parentDocument.outlinerCards = parentDocument.outlinerCards.concat(
+      savedCard.id
+    );
+    parentDocument.editorCards = parentDocument.editorCards.concat(
+      savedCard.id
+    );
     await parentDocument.save();
 
     response.status(201).json(savedCard);
