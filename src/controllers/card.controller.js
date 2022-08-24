@@ -42,19 +42,22 @@ module.exports.getCardByID = async (request, response) => {
  * @return Created card in JSON
  */
 module.exports.createCard = async (request, response) => {
-  const {title, content, document} = request.body;
+  const { title, content, document, group } = request.body;
 
   const parentDocument = await Document.findById(document);
-console.log(request.body);
+  console.log(request.body);
   const card = new Card({
     title: title,
     content: content,
-    document: document
+    document: document,
+    group: group
   });
 
   const savedCard = await card.save();
 
   parentDocument.cards = parentDocument.cards.concat(savedCard.id);
+  parentDocument.cardsAndGroups = parentDocument.cardsAndGroups.concat(savedCard.id);
+
   await parentDocument.save();
 
   response.status(201).json(savedCard);
@@ -67,10 +70,17 @@ console.log(request.body);
  *
  * @return Status 204
  */
- module.exports.deleteCardByID = async (request, response) => {
+module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   await Card.findByIdAndRemove(target);
+
   await Document.updateOne({ cards: target }, { $pull: { cards: target } });
+  await Document.updateOne({ cardsAndGroups: target }, { $pull: { cardsAndGroups: target } });
+
+  if (Card.group) {
+    await Group.updateOne({ contains: target }, { $pull: { contains: target } });
+  }
+
   response.status(204).send(`Card deleted : ${target}`);
 };
 
@@ -82,7 +92,7 @@ console.log(request.body);
  *
  * @return Status 200
  */
- module.exports.updateCardByID = (request, response, next) => {
+module.exports.updateCardByID = (request, response, next) => {
   const body = request.body
 
   const card = {
@@ -91,14 +101,13 @@ console.log(request.body);
     document: body.document,
     parentCard: body.parentCard,
     cardIndex: body.cardIndex,
-    cards: body.cards
+    cards: body.cards,
+    group: body.group
   }
-  
+
   Card.findByIdAndUpdate(request.params.id, card, { new: true })
     .then(updatedCard => {
       response.json(updatedCard)
     })
     .catch(error => next(error))
-
-
 };
