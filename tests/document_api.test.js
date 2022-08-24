@@ -130,19 +130,20 @@ describe('cards can be moved within doc', () => {
             cardArray.push(cardObject.id)
             await cardObject.save()
         }
-        docToChange.cards = cardArray
+        docToChange.editorCards = cardArray
+        docToChange.outlinerCards = cardArray
 
         await api
             .put(`/api/document/${docToChange.id}`)
             .send(docToChange)
     })
 
-    test('change order', async () => {
+    test('change order in outlinerCards', async () => {
         const docsAtStart = await helper.docsInDb()
         const docToChange = docsAtStart[0]
-        const originalArray = docToChange.cards;
+        const originalArray = docToChange.outlinerCards;
         const newArray = [originalArray[1], originalArray[2], originalArray[0]]
-        docToChange.cards = newArray
+        docToChange.outlinerCards = newArray
 
         await api
             .put(`/api/document/${docToChange.id}`)
@@ -153,7 +154,26 @@ describe('cards can be moved within doc', () => {
         const docsAtEnd = await helper.docsInDb()
 
         expect(docsAtStart.length).toBe(docsAtEnd.length)
-        expect(docsAtEnd[0].cards).toStrictEqual(newArray)
+        expect(docsAtEnd[0].outlinerCards).toStrictEqual(newArray)
+    })
+
+    test('change order in editorCards', async () => {
+        const docsAtStart = await helper.docsInDb()
+        const docToChange = docsAtStart[0]
+        const originalArray = docToChange.editorCards;
+        const newArray = [originalArray[1], originalArray[2], originalArray[0]]
+        docToChange.editorCards = newArray
+
+        await api
+            .put(`/api/document/${docToChange.id}`)
+            .send(docToChange)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const docsAtEnd = await helper.docsInDb()
+
+        expect(docsAtStart.length).toBe(docsAtEnd.length)
+        expect(docsAtEnd[0].editorCards).toStrictEqual(newArray)
     })
 
     // test('nest/group', async () => {

@@ -4,15 +4,12 @@ const Document = require('../src/models/document.model')
 const initialCards = [
   {
     content: 'The first card is always the most memorable',
-    cardIndex: 1,
   },
   {
     content: 'Then second cards get less attention',
-    cardIndex: 2,
   },
   {
     content: 'This is the third and last card',
-    cardIndex: 3,
   }
 ]
 
