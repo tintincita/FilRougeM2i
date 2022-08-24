@@ -1,4 +1,3 @@
-
 const Document = require("../models/document.model");
 const Card = require('../models/card.model')
 const Group = require('../models/group.model')
@@ -11,7 +10,10 @@ const Group = require('../models/group.model')
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find({}).populate("cards");
+  const documents = await Document.find().populate(
+    "outlinerCards",
+    "editorCards"
+  );
   response.json(documents);
 };
 
@@ -24,7 +26,10 @@ module.exports.getAllDocuments = async (request, response) => {
  * @return Document in JSON
  */
 module.exports.getDocumentByID = async (request, response) => {
-  const document = await Document.findById(request.params.id);
+  const document = await Document.findById(request.params.id).populate(
+    "outlinerCards",
+    "editorCards"
+  );
   if (document) {
     response.json(document);
   } else {
@@ -46,16 +51,13 @@ module.exports.createDocument = async (request, response) => {
   const body = request.body;
   console.log(body);
 
-  const firstCard = new Card()
-
   const document = new Document({
     title: body.title || "",
-    cards: [firstCard.id]
+    outlinerCards: [],
+    editorCards: [],
   });
 
   const savedDocument = await document.save();
-  firstCard.document = savedDocument.id
-  await firstCard.save()
 
   response.status(201).json(savedDocument);
 };
@@ -83,20 +85,18 @@ module.exports.deleteDocumentByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateDocumentByID = (request, response, next) => {
-  const body = request.body
+  const body = request.body;
 
   const document = {
     title: body.title,
     parentSpace: body.parentSpace,
-    cards: body.cards,
-    cardsAndGroups: body.cardsAndGroups
-  }
-  
+    outlinerCards: body.outlinerCards,
+    editorCards: body.editorCards,
+  };
+
   Document.findByIdAndUpdate(request.params.id, document, { new: true })
-    .then(updatedDocument => {
-      response.json(updatedDocument)
+    .then((updatedDocument) => {
+      response.json(updatedDocument);
     })
-    .catch(error => next(error))
-
-
+    .catch((error) => next(error));
 };

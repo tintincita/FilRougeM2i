@@ -45,22 +45,30 @@ module.exports.createCard = async (request, response) => {
   const { title, content, document, group } = request.body;
 
   const parentDocument = await Document.findById(document);
-  console.log(request.body);
-  const card = new Card({
-    title: title,
-    content: content,
-    document: document,
-    group: group
-  });
 
-  const savedCard = await card.save();
+  if (parentDocument) {
+    console.log(request.body);
+    const card = new Card({
+      title: title || "titre",
+      content: content || "contenu",
+      document: document,
+    });
 
-  parentDocument.cards = parentDocument.cards.concat(savedCard.id);
-  parentDocument.cardsAndGroups = parentDocument.cardsAndGroups.concat(savedCard.id);
+    const savedCard = await card.save();
 
-  await parentDocument.save();
+    parentDocument.outlinerCards = parentDocument.outlinerCards.concat(
+      savedCard.id
+    );
+    parentDocument.editorCards = parentDocument.editorCards.concat(
+      savedCard.id
+    );
+    await parentDocument.save();
 
-  response.status(201).json(savedCard);
+    response.status(201).json(savedCard);
+  } else {
+    response.status(400);
+    throw "Missing document, cannot create orphan card";
+  }
 };
 /**
  * Delete card by ID with DELETE method from '/api/card/:id'
@@ -73,14 +81,10 @@ module.exports.createCard = async (request, response) => {
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   await Card.findByIdAndRemove(target);
-
-  await Document.updateOne({ cards: target }, { $pull: { cards: target } });
-  await Document.updateOne({ cardsAndGroups: target }, { $pull: { cardsAndGroups: target } });
-
-  if (Card.group) {
-    await Group.updateOne({ contains: target }, { $pull: { contains: target } });
-  }
-
+  await Document.updateOne(
+    { outlinerCards: target, editorCards: target },
+    { $pull: { outlinerCards: target, editorCards: target } }
+  );
   response.status(204).send(`Card deleted : ${target}`);
 };
 
@@ -93,7 +97,7 @@ module.exports.deleteCardByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateCardByID = (request, response, next) => {
-  const body = request.body
+  const body = request.body;
 
   const card = {
     title: body.title,
@@ -101,13 +105,13 @@ module.exports.updateCardByID = (request, response, next) => {
     document: body.document,
     parentCard: body.parentCard,
     cardIndex: body.cardIndex,
-    cards: body.cards,
-    group: body.group
-  }
+    outlinerCards: body.cards,
+    editorCards: body.cards,
+  };
 
   Card.findByIdAndUpdate(request.params.id, card, { new: true })
-    .then(updatedCard => {
-      response.json(updatedCard)
+    .then((updatedCard) => {
+      response.json(updatedCard);
     })
-    .catch(error => next(error))
+    .catch((error) => next(error));
 };
