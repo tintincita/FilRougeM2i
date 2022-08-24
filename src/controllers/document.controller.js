@@ -9,10 +9,7 @@ const Card = require("../models/card.model");
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find().populate(
-    "outlinerCards",
-    "editorCards"
-  );
+  const documents = await Document.find().populate("outlinerCards").populate("editorCards");
   response.json(documents);
 };
 
