@@ -4,7 +4,13 @@ const documentSchema = mongoose.Schema({
   title: {
     type: String,
   },
-  cards: [
+  outlinerCards: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Card",
+    },
+  ],
+  editorCards: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card",
