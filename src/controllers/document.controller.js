@@ -9,7 +9,10 @@ const Card = require("../models/card.model");
  * @return All documents in JSON
  */
 module.exports.getAllDocuments = async (request, response) => {
-  const documents = await Document.find().populate("cards");
+  const documents = await Document.find().populate(
+    "outlinerCards",
+    "editorCards"
+  );
   response.json(documents);
 };
 
@@ -22,7 +25,10 @@ module.exports.getAllDocuments = async (request, response) => {
  * @return Document in JSON
  */
 module.exports.getDocumentByID = async (request, response) => {
-  const document = await Document.findById(request.params.id).populate("cards");
+  const document = await Document.findById(request.params.id).populate(
+    "outlinerCards",
+    "editorCards"
+  );
   if (document) {
     response.json(document);
   } else {
@@ -46,7 +52,8 @@ module.exports.createDocument = async (request, response) => {
 
   const document = new Document({
     title: body.title || "",
-    cards: [],
+    outlinerCards: [],
+    editorCards: [],
   });
 
   const savedDocument = await document.save();
@@ -82,7 +89,8 @@ module.exports.updateDocumentByID = (request, response, next) => {
   const document = {
     title: body.title,
     parentSpace: body.parentSpace,
-    cards: body.cards,
+    outlinerCards: body.outlinerCards,
+    editorCards: body.editorCards,
   };
 
   Document.findByIdAndUpdate(request.params.id, document, { new: true })

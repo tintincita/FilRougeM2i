@@ -46,23 +46,23 @@ module.exports.createCard = async (request, response) => {
 
   const parentDocument = await Document.findById(document);
 
-  if(parentDocument) {
+  if (parentDocument) {
     console.log(request.body);
     const card = new Card({
       title: title || "titre",
       content: content || "contenu",
       document: document,
     });
-  
+
     const savedCard = await card.save();
-  
+
     parentDocument.cards = parentDocument.cards.concat(savedCard.id);
     await parentDocument.save();
-  
+
     response.status(201).json(savedCard);
   } else {
     response.status(400);
-    throw 'Missing document, cannot create orphan card';
+    throw "Missing document, cannot create orphan card";
   }
 };
 /**
@@ -76,7 +76,10 @@ module.exports.createCard = async (request, response) => {
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   await Card.findByIdAndRemove(target);
-  await Document.updateOne({ cards: target }, { $pull: { cards: target } });
+  await Document.updateOne(
+    { outlinerCards: target, editorCards: target },
+    { $pull: { outlinerCards: target, editorCards: target } }
+  );
   response.status(204).send(`Card deleted : ${target}`);
 };
 
@@ -97,7 +100,8 @@ module.exports.updateCardByID = (request, response, next) => {
     document: body.document,
     parentCard: body.parentCard,
     cardIndex: body.cardIndex,
-    cards: body.cards,
+    outlinerCards: body.cards,
+    editorCards: body.cards,
   };
 
   Card.findByIdAndUpdate(request.params.id, card, { new: true })
