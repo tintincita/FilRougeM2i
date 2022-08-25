@@ -41,27 +41,45 @@ module.exports.getGroupByID = async (request, response) => {
  * @return Created group in JSON
  */
 module.exports.createGroup = async (request, response) => {
-    console.log(request.body);
-    const { contains, document, indentation } = request.body;
+    // console.log(request.body);
+    let { contains, document, indentation } = request.body;
 
     const parentDocument = await Document.findById(document);
 
+    // *** check contained cards are not in another group already ?
+    
     console.log(request.body);
-    if (!indentation){
-        indentation = contains.map(() => 0)
+    if (parentDocument) {
+
+        if (!indentation) {
+            indentation = contains.map(() => 0)
+        }
+        const group = new Group({
+            contains: contains,
+            document: document,
+            indentation: indentation
+        });
+
+        const savedGroup = await group.save();
+
+        let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
+        newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
+
+        parentDocument.editorCardsAndGroups = newCardsAndGroups;
+        await parentDocument.save();
+
+        //  *** change group field within each card to savedGroup
+        // let cardToUpdate;
+
+        // contains.forEach((card) => {
+        //     cardToUpdate = await Card.findByIdAndUpdate(card, group = )
+        // })
+
+        response.status(201).json(savedGroup);
+    } else {
+        response.status(400);
+        throw "Missing document, cannot create orphan group";
     }
-    const group = new Group({
-        contains: contains,
-        document: document,
-        indentation: indentation
-    });
-
-    const savedGroup = await group.save();
-
-    // console.log(parentDocument.editorCardsAndGroups);
-    // await parentDocument.save();
-
-    response.status(201).json(savedGroup);
 };
 /**
  * Delete group by ID with DELETE method from '/api/group/:id'
@@ -87,7 +105,7 @@ module.exports.deleteGroupByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateGroupByID = (request, response, next) => {
-    const {contains, document, indentation} = request.body
+    const { contains, document, indentation } = request.body
     const target = request.params.id
 
     const group = {
@@ -99,7 +117,7 @@ module.exports.updateGroupByID = (request, response, next) => {
     let oldGroup = Group.findById(target)
     if (oldGroup.document != document) {
         console.log("group changed doc");
-        // update old and new doc
+        // ** update old and new doc
     }
 
     Group.findByIdAndUpdate(target, group, { new: true })

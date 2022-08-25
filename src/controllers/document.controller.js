@@ -42,6 +42,9 @@ module.exports.getDocumentByID = async (request, response) => {
   const document = await Document.findById(request.params.id).populate("outlinerCards").populate("editorCards");
 
   if (document) {
+    
+    // routine to check editorCardsAndGroups is aligned with editorCards
+    
     let ids = objectListToArray(document.editorCardsAndGroups)
     // console.log(ids);
 

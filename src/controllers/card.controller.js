@@ -66,6 +66,11 @@ module.exports.createCard = async (request, response) => {
     parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
       savedCard.id
     );
+
+    if (group) {
+      // check if card is in group / include card in group 
+    }
+    
     await parentDocument.save();
 
     response.status(201).json(savedCard);

@@ -2,6 +2,6 @@ POST  http://localhost:3001/api/card
 Content-Type: application/json
 
 {
-    "content": "this is yet another card, a very pretty card",
+    "content": "this is yet another card to be grouped with another, a very pretty card",
     "document": "63073baeea21e0c2acd42834"
 }
