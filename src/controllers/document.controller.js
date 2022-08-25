@@ -49,6 +49,7 @@ module.exports.createDocument = async (request, response) => {
     title: body.title || "",
     outlinerCards: [],
     editorCards: [],
+    editorCardsAndGroups: []
   });
 
   const savedDocument = await document.save();
@@ -66,7 +67,15 @@ module.exports.createDocument = async (request, response) => {
  */
 module.exports.deleteDocumentByID = async (request, response) => {
   const target = request.params.id;
+
   await Document.findByIdAndRemove(target);
+
+  let containedCards = Document.outlinerCards;
+  containedCards.forEach((card) => {
+    console.log(card.id);
+    await Card.deleteCardById(card.id)
+  }
+  )
   response.status(204).send(`Document deleted : ${target}`);
 };
 

@@ -16,7 +16,7 @@ const documentSchema = mongoose.Schema({
       ref: "Card",
     },
   ],
-  cardsAndGroups: [
+  editorCardsAndGroups: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card" | "Group",

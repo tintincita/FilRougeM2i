@@ -53,7 +53,7 @@ module.exports.createGroup = async (request, response) => {
 
     const savedGroup = await group.save();
 
-    // console.log(parentDocument.cardsAndGroups);
+    // console.log(parentDocument.editorCardsAndGroups);
     // await parentDocument.save();
 
     response.status(201).json(savedGroup);
