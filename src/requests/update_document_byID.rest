@@ -1,8 +1,6 @@
-PUT  http://localhost:3001/api/document/6304e7653bec42199cea6651
+PUT  http://localhost:3001/api/document/63073baeea21e0c2acd42834
 Content-Type: application/json
 
 {
-    "editorCardsAndGroups": ["6305d77169732ad0d333f1a3", "6304e767bb9bdd06c7e1570b"],
-    "title": "one doc to keep them all",
-    "cards": ["6304e767bb9bdd06c7e15707", "6304e767bb9bdd06c7e15709", "6304e767bb9bdd06c7e1570b"]
+    "editorCardsAndGroups": ["63073c0dea21e0c2acd42849", "63073be0ea21e0c2acd42842"]
 }

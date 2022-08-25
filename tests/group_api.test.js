@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../src/config/app')
 
 const Group = require('../src/models/group.model')
+const Card = require('../src/models/card.model')
+const Document = require('../src/models/document.model')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -92,6 +94,9 @@ test('groups are returned as json', async () => {
 //   )
 // })
 
-afterAll(() => {
+afterAll( async() => {
+  await Group.deleteMany({});
+  await Card.deleteMany({});
+  await Document.deleteMany({});
   mongoose.connection.close()
 })

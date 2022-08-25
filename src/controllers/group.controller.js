@@ -42,13 +42,18 @@ module.exports.getGroupByID = async (request, response) => {
  */
 module.exports.createGroup = async (request, response) => {
     console.log(request.body);
-    const { contains, document } = request.body;
+    const { contains, document, indentation } = request.body;
 
     const parentDocument = await Document.findById(document);
+
     console.log(request.body);
+    if (!indentation){
+        indentation = contains.map(() => 0)
+    }
     const group = new Group({
         contains: contains,
         document: document,
+        indentation: indentation
     });
 
     const savedGroup = await group.save();
@@ -82,14 +87,22 @@ module.exports.deleteGroupByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateGroupByID = (request, response, next) => {
-    const {contains, document} = request.body
+    const {contains, document, indentation} = request.body
+    const target = request.params.id
 
     const group = {
         contains: contains,
         document: document,
+        indentation: indentation
     }
 
-    Group.findByIdAndUpdate(request.params.id, group, { new: true })
+    let oldGroup = Group.findById(target)
+    if (oldGroup.document != document) {
+        console.log("group changed doc");
+        // update old and new doc
+    }
+
+    Group.findByIdAndUpdate(target, group, { new: true })
         .then(updatedGroup => {
             response.json(updatedGroup)
         })

@@ -197,8 +197,8 @@ describe('cards can be moved within doc', () => {
 })
 
 
-afterAll(() => {
-    Card.deleteMany({});
-    Document.deleteMany({});
+afterAll( async() => {
+    await Card.deleteMany({});
+    await Document.deleteMany({});
     mongoose.connection.close()
 })
