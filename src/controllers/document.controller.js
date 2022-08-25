@@ -66,6 +66,17 @@ module.exports.createDocument = async (request, response) => {
 module.exports.deleteDocumentByID = async (request, response) => {
   const target = request.params.id;
   await Document.findByIdAndRemove(target);
+
+  let containedCards = Document.outlinerCards;
+
+  if (containedCards) {
+    containedCards.forEach((card) => {
+      console.log(card.id);
+      Card.deleteCardById(card.id)
+    }
+    )
+  }
+
   response.status(204).send(`Document deleted : ${target}`);
 };
 
