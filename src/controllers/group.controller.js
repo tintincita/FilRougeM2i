@@ -50,43 +50,38 @@ module.exports.createGroup = async (request, response) => {
     }
 
     const parentDocument = await Document.findById(document);
-
     if (!parentDocument) {
         response.status(400);
         throw "Missing document, cannot create orphan group";
-    } else {
-
-        if (!indentation) {
-            indentation = contains.map(() => 0)
-        }
-
-        const group = new Group({
-            contains: contains,
-            document: document,
-            indentation: indentation,
-            title: title
-        });
-
-        const savedGroup = await group.save();
-
-        // *** updates newCardsAndGroups with new group instead of contained cards
-        let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
-        newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
-
-
-        parentDocument.editorCardsAndGroups = newCardsAndGroups;
-        await parentDocument.save();
-
-        //  *** change group field within each card to savedGroup
-        // let cardToUpdate;
-
-        // contains.forEach((card) => {
-        //     cardToUpdate = await Card.findByIdAndUpdate(card, group = )
-        // })
-        // console.log(savedGroup);
-        response.status(201).json(savedGroup);
     }
+
+    if (!indentation) {
+        indentation = contains.map(() => 0)
+    }
+
+    const group = new Group({
+        contains: contains,
+        document: document,
+        indentation: indentation,
+        title: title
+    });
+
+    const savedGroup = await group.save();
+
+    // *** updates newCardsAndGroups replacing new group in place contained cards
+    let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
+    newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
+    parentDocument.editorCardsAndGroups = newCardsAndGroups;
+    await parentDocument.save();
+
+    //  *** change group field within each contained card to savedGroup
+    for (i = 0; i < contains.length; i++) {
+        await Card.findByIdAndUpdate(contains[0], {group: savedGroup.id})
+    }
+
+    response.status(201).json(savedGroup);
 };
+
 /**
  * Delete group by ID with DELETE method from '/api/group/:id'
  *
@@ -113,7 +108,7 @@ module.exports.deleteGroupByID = async (request, response) => {
         }
     }
 
-    await Document.findByIdAndUpdate(groupToDelete.document, {editorCardsAndGroups: newCardsAndGroups}, { new: true })
+    await Document.findByIdAndUpdate(groupToDelete.document, { editorCardsAndGroups: newCardsAndGroups }, { new: true })
     await Group.findByIdAndRemove(target);
     response.status(204).send(`Group deleted : ${target}`);
 };
@@ -129,6 +124,8 @@ module.exports.deleteGroupByID = async (request, response) => {
 module.exports.updateGroupByID = (request, response, next) => {
     const { contains, document, indentation, title } = request.body
     const target = request.params.id
+
+    console.log("contains.lenght", contains.length);
 
     const group = {
         contains: contains,

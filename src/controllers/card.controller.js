@@ -97,7 +97,13 @@ module.exports.deleteCardByID = async (request, response) => {
   );
   
   if (cardToDelete.group) {
-    await Group.updateOne({ contains: target }, { $pull: { contains: target } });
+    await Group.updateOne(
+      { contains: target }, 
+      { $pull: { contains: target } });
+  } else {
+    await Document.updateOne(
+    { editorCardsAndGroups: target},
+    { $pull: { editorCardsAndGroups: target} })
   }
 
   await Card.findByIdAndRemove(target);
