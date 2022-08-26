@@ -42,14 +42,12 @@ module.exports.getGroupByID = async (request, response) => {
  */
 module.exports.createGroup = async (request, response) => {
     // console.log(request.body);
-    let { contains, document, indentation } = request.body;
+    let { contains, document, indentation, title } = request.body;
     if (!contains) {
         response.status(400);
         throw "Missing cards, cannot create empty group";
     }
     const parentDocument = await Document.findById(document);
-
-
 
     // *** check contained cards are not in another group already ?
 
@@ -62,7 +60,8 @@ module.exports.createGroup = async (request, response) => {
         const group = new Group({
             contains: contains,
             document: document,
-            indentation: indentation
+            indentation: indentation,
+            title: title
         });
 
         const savedGroup = await group.save();
@@ -110,13 +109,14 @@ module.exports.deleteGroupByID = async (request, response) => {
  * @return Status 200
  */
 module.exports.updateGroupByID = (request, response, next) => {
-    const { contains, document, indentation } = request.body
+    const { contains, document, indentation, title } = request.body
     const target = request.params.id
 
     const group = {
         contains: contains,
         document: document,
-        indentation: indentation
+        indentation: indentation,
+        title: title
     }
 
     let oldGroup = Group.findById(target)
