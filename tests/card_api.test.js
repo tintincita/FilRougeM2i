@@ -10,7 +10,6 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Card.deleteMany({})
-
   let cardObject = new Card()
 
   for (let i = 0; i < helper.initialCards.length; i++) {

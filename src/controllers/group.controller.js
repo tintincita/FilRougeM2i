@@ -43,20 +43,23 @@ module.exports.getGroupByID = async (request, response) => {
 module.exports.createGroup = async (request, response) => {
     // console.log(request.body);
     let { contains, document, indentation, title } = request.body;
+
     if (!contains) {
         response.status(400);
         throw "Missing cards, cannot create empty group";
     }
+
     const parentDocument = await Document.findById(document);
 
-    // *** check contained cards are not in another group already ?
-
-    console.log(request.body);
-    if (parentDocument) {
+    if (!parentDocument) {
+        response.status(400);
+        throw "Missing document, cannot create orphan group";
+    } else {
 
         if (!indentation) {
             indentation = contains.map(() => 0)
         }
+
         const group = new Group({
             contains: contains,
             document: document,
@@ -66,10 +69,13 @@ module.exports.createGroup = async (request, response) => {
 
         const savedGroup = await group.save();
 
+        console.log("before", parentDocument.editorCardsAndGroups);
         let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
         newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
-
+        console.log("after", newCardsAndGroups);
+        
         parentDocument.editorCardsAndGroups = newCardsAndGroups;
+        console.log("CHECK", parentDocument.editorCardsAndGroups);
         await parentDocument.save();
 
         //  *** change group field within each card to savedGroup
@@ -78,11 +84,8 @@ module.exports.createGroup = async (request, response) => {
         // contains.forEach((card) => {
         //     cardToUpdate = await Card.findByIdAndUpdate(card, group = )
         // })
-
+        console.log(savedGroup);
         response.status(201).json(savedGroup);
-    } else {
-        response.status(400);
-        throw "Missing document, cannot create orphan group";
     }
 };
 /**

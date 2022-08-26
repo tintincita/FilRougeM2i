@@ -1,6 +1,8 @@
 const Document = require("../models/document.model");
 const Group = require("../models/group.model");
 const Card = require("../models/card.model");
+
+const o = require("../utils/object_helper")
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -23,21 +25,6 @@ module.exports.getAllDocuments = async (request, response) => {
  * @return Document in JSON
  */
 
-// returns a promise
-const isGroup = (an_id) => {
-  return Group.findById(an_id).then((res) => res)
-}
-
-// returns a promise
-const isCard = (an_id) => {
-  return Card.findById(an_id).then((res) => res)
-}
-
-const objectListToArray = (object) => {
-  return Object.values(object).map((id) => String(id))
-}
-
-
 module.exports.getDocumentByID = async (request, response) => {
   const document = await Document.findById(request.params.id).populate("outlinerCards").populate("editorCards");
 
@@ -45,7 +32,7 @@ module.exports.getDocumentByID = async (request, response) => {
     
     // routine to check editorCardsAndGroups is aligned with editorCards
     
-    let ids = objectListToArray(document.editorCardsAndGroups)
+    let ids = o.objectListToArray(document.editorCardsAndGroups)
     // console.log(ids);
 
     let groupResponse = true;
@@ -56,13 +43,13 @@ module.exports.getDocumentByID = async (request, response) => {
     for (id_to_check of ids) {
       // console.log(id_to_check);
 
-      groupResponse = await isGroup(id_to_check);
+      groupResponse = await o.isGroup(id_to_check);
       // console.log("group", groupResponse);
       if (groupResponse) {
         groupResponse.contains.forEach((id) => cardList.push(String(id)))
       }
 
-      cardResponse = await isCard(id_to_check)
+      cardResponse = await o.isCard(id_to_check)
       if (cardResponse) {
         cardList.push(id_to_check)
       }
