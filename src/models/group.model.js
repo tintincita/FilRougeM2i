@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const groupSchema = mongoose.Schema(
   {
+    title: String,
     contains: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Card" | "Group",

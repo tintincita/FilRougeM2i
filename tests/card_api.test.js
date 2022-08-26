@@ -13,7 +13,7 @@ beforeEach(async () => {
 
   let cardObject = new Card()
 
-  for (let i = 0 ; i < helper.initialCards.length ; i++) {
+  for (let i = 0; i < helper.initialCards.length; i++) {
     cardObject = new Card(helper.initialCards[i])
     await cardObject.save()
   }
@@ -62,23 +62,30 @@ test('a specific card can be viewed', async () => {
   expect(resultCard.body).toEqual(processedCardToView)
 })
 
-test('a card can be deleted', async () => {
-  const cardsAtStart = await helper.cardsInDb()
-  const cardToDelete = cardsAtStart[0]
+describe('DELETE card', () => {
+  test('a card can be deleted', async () => {
+    const cardsAtStart = await helper.cardsInDb()
+    const cardToDelete = cardsAtStart[0]
 
-  await api
-    .delete(`/api/card/${cardToDelete.id}`)
-    .expect(204)
+    await api
+      .delete(`/api/card/${cardToDelete.id}`)
+      .expect(204)
 
-  const cardsAtEnd = await helper.cardsInDb()
+    const cardsAtEnd = await helper.cardsInDb()
 
-  expect(cardsAtEnd).toHaveLength(
-    helper.initialCards.length - 1
-  )
+    expect(cardsAtEnd).toHaveLength(
+      helper.initialCards.length - 1
+    )
 
-  const contents = cardsAtEnd.map(r => r.content)
+    const contents = cardsAtEnd.map(r => r.content)
+    expect(contents).not.toContain(cardToDelete.content)
+  })
 
-  expect(contents).not.toContain(cardToDelete.content)
+  test('parent document is updated', () => { })
+
+  test('if deleted card in group. group is updated', () => {
+    // once card is deleted, if part of group, group.contain.not:includes
+  })
 })
 
 test('a card can be updated', async () => {
@@ -87,25 +94,25 @@ test('a card can be updated', async () => {
   const cardToChange = cardsAtStart[0]
 
   const changesToCard = {
-      content: 'title of card is changed through POST',
+    content: 'title of card is changed through POST',
   }
 
   await api
-      .put(`/api/card/${cardToChange.id}`)
-      .send(changesToCard)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
+    .put(`/api/card/${cardToChange.id}`)
+    .send(changesToCard)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/card')
 
   const contents = response.body.map(r => r.content)
 
   expect(contents).toContain(
-      'title of card is changed through POST'
+    'title of card is changed through POST'
   )
 })
 
-afterAll( async() => {
+afterAll(async () => {
   await Card.deleteMany({});
   mongoose.connection.close()
 })

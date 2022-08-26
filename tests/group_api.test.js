@@ -10,17 +10,37 @@ const helper = require('./test_helper')
 const api = supertest(app)
 
 
-beforeEach(async () => {
-  // await Group.deleteMany({})
+beforeAll(async () => {
 
-  // let groupObject = new Group()
+  await Document.deleteMany({})
+  await Group.deleteMany({})
+  await Card.deleteMany({})
 
-  // for (let i = 0 ; i < helper.initialCards.length ; i++) {
-  //   cardObject = new Card(helper.initialCards[i])
-  //   await cardObject.save()
-  // }
+  let docObject = new Document()
+  for (let i = 0; i < helper.initialDocs.length; i++) {
+    docObject = new Document(helper.initialDocs[i])
+    await docObject.save()
+  }
 
+  let docsAtStart = await helper.docsInDb()
+  let docToFill = docsAtStart[0]
 
+  let cardArray = []
+
+  for (let i = 0; i < helper.initialCards.length; i++) {
+    cardObject = new Card(helper.initialCards[i])
+    cardObject.document = docToFill.id
+    cardArray.push(cardObject.id)
+    await cardObject.save()
+  }
+
+  docToFill.editorCards = cardArray
+  docToFill.outlinerCards = cardArray
+  docToFill.editorCardsAndGroups = cardArray
+
+  await api
+    .put(`/api/document/${docToFill.id}`)
+    .send(docToFill)
 })
 
 test('groups are returned as json', async () => {
@@ -30,71 +50,33 @@ test('groups are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-// test('all initial cards are loaded', async () => {
-//   const response = await api.get('/api/card')
+describe('CREATE group', () => {
+  test('a group can be created', async () => {})
+  test('an empty group cannot be created', async () => {})
+  test('an orphan group cannot be created', async () => {})
+})
 
-//   expect(response.body).toHaveLength(helper.initialCards.length)
-// })
+describe('VIEW group', () => {
+  test('a specific group can be viewed', async() => {})
+  test('a nonExisting ID returns error', async() => {})
+  test('a malformatted ID returns error', async() => {})
+})
 
-// test('a specific card can be viewed', async () => {
-//   const cardsAtStart = await helper.cardsInDb()
+describe('DELETE group', () => {
+  test('contained cards do not get deleted', async () => {})
+  test('parent doc still contains all cards', async () => {}) 
+})
 
-//   const cardToView = cardsAtStart[0]
+describe('UPDATE group', () => {
+  test('a group title can be updated', async () => {})
+  test('a card can be added to group', async () => {})
+  test('a card can be moved within group', async () => {})
+  test('a card can be taken out of group', async () => {})
+  test('a group with one card becomes just a card', async () => {})
+})
 
-//   const resultCard = await api
-//     .get(`/api/card/${cardToView.id}`)
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/)
 
-//   const processedCardToView = JSON.parse(JSON.stringify(cardToView))
-
-//   expect(resultCard.body).toEqual(processedCardToView)
-// })
-
-// test('a card can be deleted', async () => {
-//   const cardsAtStart = await helper.cardsInDb()
-//   const cardToDelete = cardsAtStart[0]
-
-//   await api
-//     .delete(`/api/card/${cardToDelete.id}`)
-//     .expect(204)
-
-//   const cardsAtEnd = await helper.cardsInDb()
-
-//   expect(cardsAtEnd).toHaveLength(
-//     helper.initialCards.length - 1
-//   )
-
-//   const contents = cardsAtEnd.map(r => r.content)
-
-//   expect(contents).not.toContain(cardToDelete.content)
-// })
-
-// test('a card can be updated', async () => {
-//   const cardsAtStart = await helper.cardsInDb()
-
-//   const cardToChange = cardsAtStart[0]
-
-//   const changesToCard = {
-//       content: 'title of card is changed through POST',
-//   }
-
-//   await api
-//       .put(`/api/card/${cardToChange.id}`)
-//       .send(changesToCard)
-//       .expect(200)
-//       .expect('Content-Type', /application\/json/)
-
-//   const response = await api.get('/api/card')
-
-//   const contents = response.body.map(r => r.content)
-
-//   expect(contents).toContain(
-//       'title of card is changed through POST'
-//   )
-// })
-
-afterAll( async() => {
+afterAll(async () => {
   await Group.deleteMany({});
   await Card.deleteMany({});
   await Document.deleteMany({});
