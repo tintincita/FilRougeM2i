@@ -69,13 +69,12 @@ module.exports.createGroup = async (request, response) => {
 
         const savedGroup = await group.save();
 
-        console.log("before", parentDocument.editorCardsAndGroups);
+        // updates newCardsAndGroups with new group
         let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
         newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
-        console.log("after", newCardsAndGroups);
-        
+
+
         parentDocument.editorCardsAndGroups = newCardsAndGroups;
-        console.log("CHECK", parentDocument.editorCardsAndGroups);
         await parentDocument.save();
 
         //  *** change group field within each card to savedGroup
@@ -84,7 +83,7 @@ module.exports.createGroup = async (request, response) => {
         // contains.forEach((card) => {
         //     cardToUpdate = await Card.findByIdAndUpdate(card, group = )
         // })
-        console.log(savedGroup);
+        // console.log(savedGroup);
         response.status(201).json(savedGroup);
     }
 };
@@ -98,8 +97,26 @@ module.exports.createGroup = async (request, response) => {
  */
 module.exports.deleteGroupByID = async (request, response) => {
     const target = request.params.id;
+    const groupToDelete = await Group.findById(target)
+
+    // *** replace group with cards (contains) in document editorCardsAndGroups
+    let parentDoc = await Document.findById(groupToDelete.document)
+    let newCardsAndGroups = []
+
+    for (item of parentDoc.editorCardsAndGroups) {
+        console.log(item)
+        if (item == groupToDelete.id) {
+            groupToDelete.contains.forEach((containedItem) => {
+                newCardsAndGroups.push(containedItem)
+            })
+        } else {
+            newCardsAndGroups.push(item)
+        }
+    }
+    console.log(newCardsAndGroups);
+
+    await Document.findByIdAndUpdate(groupToDelete.document, {editorCardsAndGroups: newCardsAndGroups}, { new: true })
     await Group.findByIdAndRemove(target);
-    // await Document.updateOne({ cards: target}, {$pull: { cards: target}});
     response.status(204).send(`Group deleted : ${target}`);
 };
 

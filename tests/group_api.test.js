@@ -7,6 +7,7 @@ const Card = require('../src/models/card.model')
 const Document = require('../src/models/document.model')
 const helper = require('./test_helper')
 const o = require('../src/utils/object_helper')
+const { default: isTaxID } = require('validator/lib/isTaxID')
 
 const api = supertest(app)
 
@@ -56,30 +57,31 @@ describe('CREATE group', () => {
     test('a group can be created', async () => {
       const groupsAtStart = await helper.groupsInDb()
       const docsAtStart = await helper.docsInDb()
+
       const parentDoc = docsAtStart[0]
-      const cardList = o.objectListToArray(parentDoc.editorCards)
-      const cardsToGroup = cardList.slice(3)
+      const docID = parentDoc.id
+      const cardsToGroup = parentDoc.editorCards.slice(3)
 
       const newGroup = {
         contains: cardsToGroup,
-        document: parentDoc.id
+        document: docID
       }
 
-      const savedGroup = await api
+      await api
         .post(`/api/group/`)
         .send(newGroup)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const response = await api.get('/api/group')
-
       expect(response.body).toHaveLength(groupsAtStart.length + 1)
+
       const docsAtEnd = await helper.docsInDb()
-      
-      console.log(savedGroup);
-      expect(o.objectListToArray(docsAtEnd[0].editorCards)).toContain(cardsToGroup[0])
-      expect(o.objectListToArray(docsAtEnd[0].editorCardsAndGroups)).not.toContain(cardsToGroup[0])
-      expect(o.objectListToArray(docsAtEnd[0].editorCardsAndGroups)).toContain(savedGroup.id)
+      const savedNewGroup = await Group.findOne({ contains: cardsToGroup })
+
+      expect(docsAtEnd[0].editorCards).toEqual(expect.arrayContaining(cardsToGroup))
+      expect(docsAtEnd[0].editorCardsAndGroups).not.toEqual(expect.arrayContaining(cardsToGroup))
+      expect(o.objectListToArray(docsAtEnd[0].editorCardsAndGroups)).toContain(savedNewGroup.id)
     })
   })
 
@@ -133,25 +135,43 @@ describe('VIEW group', () => {
       .expect('Content-Type', /application\/json/)
 
   })
-  test('a nonExisting ID returns error', async () => { })
-  test('a malformatted ID returns error', async () => { })
+  test('a malformatted ID returns error', async () => {
+    await api
+      .get(`/api/group/77`)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
 describe('DELETE group', () => {
+  
   test('a group can be deleted', async () => {
     const groupsAtStart = await helper.groupsInDb()
     const groupToDelete = groupsAtStart[0]
-
+    
     await api
-      .delete(`/api/group/${groupToDelete.id}`)
-      .expect(204)
-
+    .delete(`/api/group/${groupToDelete.id}`)
+    .expect(204)
+    
     const groupsAtEnd = await helper.groupsInDb()
     expect(groupsAtEnd).toHaveLength(groupsAtStart.length - 1)
+    console.log(groupToDelete.contains);
+
+    // contained cards are still in parentDoc
+    const parentDoc = await Document.findById(groupToDelete.document)
+    expect(parentDoc.editorCards).toEqual(expect.arrayContaining(groupToDelete.contains))
+    expect(parentDoc.editorCardsAndGroups).toEqual(expect.arrayContaining(groupToDelete.contains))
+
+    // contained cards still exist
+    
   })
 
-  test('contained cards do not get deleted', async () => { })
-  test('parent doc still contains all cards', async () => { })
+  it('parent doc still contains all cards', () => { 
+  })
+
+  test('contained cards do not get deleted', async () => {
+  })
+  
 })
 
 describe('UPDATE group', () => {

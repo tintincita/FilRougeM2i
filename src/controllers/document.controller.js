@@ -56,7 +56,7 @@ module.exports.getDocumentByID = async (request, response) => {
     }
 
 
-    console.log(cardList);
+    // console.log(cardList);
 
     response.json(document);
   } else {
@@ -76,7 +76,7 @@ module.exports.getDocumentByID = async (request, response) => {
  */
 module.exports.createDocument = async (request, response) => {
   const body = request.body;
-  console.log(body);
+  // console.log(body);
 
   const document = new Document({
     title: body.title || "",
