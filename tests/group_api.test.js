@@ -155,7 +155,6 @@ describe('DELETE group', () => {
     
     const groupsAtEnd = await helper.groupsInDb()
     expect(groupsAtEnd).toHaveLength(groupsAtStart.length - 1)
-    console.log(groupToDelete.contains);
 
     // contained cards are still in parentDoc
     const parentDoc = await Document.findById(groupToDelete.document)

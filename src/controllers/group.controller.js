@@ -69,7 +69,7 @@ module.exports.createGroup = async (request, response) => {
 
         const savedGroup = await group.save();
 
-        // updates newCardsAndGroups with new group
+        // *** updates newCardsAndGroups with new group instead of contained cards
         let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
         newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
 
@@ -104,7 +104,6 @@ module.exports.deleteGroupByID = async (request, response) => {
     let newCardsAndGroups = []
 
     for (item of parentDoc.editorCardsAndGroups) {
-        console.log(item)
         if (item == groupToDelete.id) {
             groupToDelete.contains.forEach((containedItem) => {
                 newCardsAndGroups.push(containedItem)
@@ -113,7 +112,6 @@ module.exports.deleteGroupByID = async (request, response) => {
             newCardsAndGroups.push(item)
         }
     }
-    console.log(newCardsAndGroups);
 
     await Document.findByIdAndUpdate(groupToDelete.document, {editorCardsAndGroups: newCardsAndGroups}, { new: true })
     await Group.findByIdAndRemove(target);
