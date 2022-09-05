@@ -118,7 +118,7 @@ module.exports.deleteDocumentByID = async (request, response) => {
  *
  * @return Status 200
  */
-module.exports.updateDocumentByID = (request, response, next) => {
+module.exports.updateDocumentByID = async (request, response, next) => {
   const body = request.body;
 
   const document = {
@@ -128,10 +128,11 @@ module.exports.updateDocumentByID = (request, response, next) => {
     editorCards: body.editorCards,
     editorCardsAndGroups: body.editorCardsAndGroups
   };
+  const savedDocument = await Document.findByIdAndUpdate(request.params.id, document, { new: true }).populate("outlinerCards").populate("editorCards")
 
-  Document.findByIdAndUpdate(request.params.id, document, { new: true })
-    .then((updatedDocument) => {
-      response.json(updatedDocument);
-    })
-    .catch((error) => next(error));
+  if(savedDocument) {
+    response.json(savedDocument);
+  } else {
+    response.status(400)
+  }
 };
