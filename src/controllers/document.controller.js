@@ -1,5 +1,6 @@
 const Document = require("../models/document.model");
 const Card = require("../models/card.model");
+const { findByIdAndUpdate } = require("../models/document.model");
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -88,7 +89,7 @@ module.exports.deleteDocumentByID = async (request, response) => {
  *
  * @return Status 200
  */
-module.exports.updateDocumentByID = (request, response, next) => {
+module.exports.updateDocumentByID = async (request, response, next) => {
   const body = request.body;
 
   const document = {
@@ -97,10 +98,11 @@ module.exports.updateDocumentByID = (request, response, next) => {
     outlinerCards: body.outlinerCards,
     editorCards: body.editorCards,
   };
+  const savedDocument = await Document.findByIdAndUpdate(request.params.id, document, { new: true }).populate("outlinerCards").populate("editorCards")
 
-  Document.findByIdAndUpdate(request.params.id, document, { new: true })
-    .then((updatedDocument) => {
-      response.json(updatedDocument);
-    })
-    .catch((error) => next(error));
+  if(savedDocument) {
+    response.json(savedDocument);
+  } else {
+    response.status(400)
+  }
 };
