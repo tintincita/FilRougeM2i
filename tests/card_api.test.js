@@ -111,7 +111,7 @@ describe('DELETE card', () => {
     expect(parentDoc.editorCardsAndGroups).not.toContain(cardToDelete.id)
   })
 
-  test.only('if deleted card in group. group and document are updated', async () => {
+  test('if deleted card in group. group and document are updated', async () => {
     // setting initial conditions
     const cardsAtStart = await helper.cardsInDb()
     let parentDoc = await Document.findById(cardsAtStart[0].document)

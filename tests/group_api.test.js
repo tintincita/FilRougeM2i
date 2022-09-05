@@ -5,9 +5,9 @@ const app = require('../src/config/app')
 const Group = require('../src/models/group.model')
 const Card = require('../src/models/card.model')
 const Document = require('../src/models/document.model')
+
 const helper = require('./test_helper')
 const o = require('../src/utils/object_helper')
-const { default: isTaxID } = require('validator/lib/isTaxID')
 
 const api = supertest(app)
 

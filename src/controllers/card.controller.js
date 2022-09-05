@@ -70,7 +70,7 @@ module.exports.createCard = async (request, response) => {
     if (group) {
       // check if card is in group / include card in group 
     }
-    
+
     await parentDocument.save();
 
     response.status(201).json(savedCard);
@@ -95,15 +95,15 @@ module.exports.deleteCardByID = async (request, response) => {
     { outlinerCards: target, editorCards: target },
     { $pull: { outlinerCards: target, editorCards: target } }
   );
-  
+
   if (cardToDelete.group) {
     await Group.updateOne(
-      { contains: target }, 
+      { contains: target },
       { $pull: { contains: target } });
   } else {
     await Document.updateOne(
-    { editorCardsAndGroups: target},
-    { $pull: { editorCardsAndGroups: target} })
+      { editorCardsAndGroups: target },
+      { $pull: { editorCardsAndGroups: target } })
   }
 
   await Card.findByIdAndRemove(target);
@@ -118,7 +118,7 @@ module.exports.deleteCardByID = async (request, response) => {
  *
  * @return Status 200
  */
-module.exports.updateCardByID = (request, response, next) => {
+module.exports.updateCardByID = async (request, response, next) => {
   const body = request.body;
 
   const card = {
@@ -140,9 +140,11 @@ module.exports.updateCardByID = (request, response, next) => {
     // need to update group (old and new)
   }
 
-  Card.findByIdAndUpdate(request.params.id, card, { new: true })
-    .then((updatedCard) => {
-      response.json(updatedCard);
-    })
-    .catch((error) => next(error));
+  const savedCard = await Card.findByIdAndUpdate(request.params.id, card, { new: true })
+  
+  if(savedCard){
+    response.json(savedCard);
+  } else {
+    response.status(400)
+  }
 };
