@@ -69,7 +69,6 @@ test('a doc can be deleted', async () => {
 })
 
 test('a valid doc can be added', async () => {
-
     const newDoc = {
         title: 'new doc added through POST',
     }
@@ -81,7 +80,6 @@ test('a valid doc can be added', async () => {
         .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/document')
-
     const titles = response.body.map(r => r.title)
 
     expect(response.body).toHaveLength(helper.initialDocs.length + 1)
@@ -93,7 +91,6 @@ test('a valid doc can be added', async () => {
 
 test('a doc title can be updated', async () => {
     const docsAtStart = await helper.docsInDb()
-
     const docToChange = docsAtStart[0]
 
     const changesToDoc = {
@@ -115,7 +112,6 @@ test('a doc title can be updated', async () => {
 })
 
 describe('cards can be moved within doc', () => {
-
     beforeEach(async () => {
         await Card.deleteMany({})
 
@@ -175,28 +171,11 @@ describe('cards can be moved within doc', () => {
         expect(docsAtStart.length).toBe(docsAtEnd.length)
         expect(docsAtEnd[0].editorCards).toStrictEqual(newArray)
     })
-
-    // test('nest/group', async () => {
-    //     const docsAtStart = await helper.docsInDb()
-    //     const docToChange = docsAtStart[0]
-    //     const originalArray = docToChange.cards;
-    //     const newArray = [originalArray[1], originalArray[2], originalArray[0]]
-    //     docToChange.cards = newArray
-
-    //     await api
-    //         .put(`/api/document/${docToChange.id}`)
-    //         .send(docToChange)
-    //         .expect(200)
-    //         .expect('Content-Type', /application\/json/)
-
-    //     const docsAtEnd = await helper.docsInDb()
-
-    //     expect(docsAtStart.length).toBe(docsAtEnd.length)
-    //     expect(docsAtEnd[0].cards).toStrictEqual(newArray)
-    // })
 })
 
 
-afterAll(() => {
+afterAll( async() => {
+    await Card.deleteMany({});
+    await Document.deleteMany({});
     mongoose.connection.close()
 })

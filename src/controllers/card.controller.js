@@ -42,7 +42,7 @@ module.exports.getCardByID = async (request, response) => {
  * @return Created card in JSON
  */
 module.exports.createCard = async (request, response) => {
-  const { title, content, document } = request.body;
+  const { title, content, document, group } = request.body;
 
   const parentDocument = await Document.findById(document);
 
@@ -52,6 +52,7 @@ module.exports.createCard = async (request, response) => {
       title: title || "titre",
       content: content || "contenu",
       document: document,
+      group: group,
     });
 
     const savedCard = await card.save();
@@ -62,6 +63,14 @@ module.exports.createCard = async (request, response) => {
     parentDocument.editorCards = parentDocument.editorCards.concat(
       savedCard.id
     );
+    parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
+      savedCard.id
+    );
+
+    if (group) {
+      // check if card is in group / include card in group 
+    }
+
     await parentDocument.save();
 
     response.status(201).json(savedCard);
@@ -80,11 +89,24 @@ module.exports.createCard = async (request, response) => {
  */
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
-  await Card.findByIdAndRemove(target);
+  let cardToDelete = Card.findById(target)
+
   await Document.updateOne(
     { outlinerCards: target, editorCards: target },
     { $pull: { outlinerCards: target, editorCards: target } }
   );
+
+  if (cardToDelete.group) {
+    await Group.updateOne(
+      { contains: target },
+      { $pull: { contains: target } });
+  } else {
+    await Document.updateOne(
+      { editorCardsAndGroups: target },
+      { $pull: { editorCardsAndGroups: target } })
+  }
+
+  await Card.findByIdAndRemove(target);
   response.status(204).send(`Card deleted : ${target}`);
 };
 
@@ -96,22 +118,33 @@ module.exports.deleteCardByID = async (request, response) => {
  *
  * @return Status 200
  */
-module.exports.updateCardByID = (request, response, next) => {
+module.exports.updateCardByID = async (request, response, next) => {
   const body = request.body;
 
   const card = {
     title: body.title,
     content: body.content,
     document: body.document,
-    parentCard: body.parentCard,
-    cardIndex: body.cardIndex,
-    outlinerCards: body.cards,
-    editorCards: body.cards,
+    group: body.group,
   };
 
-  Card.findByIdAndUpdate(request.params.id, card, { new: true })
-    .then((updatedCard) => {
-      response.json(updatedCard);
-    })
-    .catch((error) => next(error));
+  const oldCard = Card.findById(request.params.id)
+
+  if (oldCard.document != card.document) {
+    console.log("card changed doc")
+    // need to update doc (old and new)
+  }
+
+  if (oldCard.group != card.group) {
+    console.log("card changed group");
+    // need to update group (old and new)
+  }
+
+  const savedCard = await Card.findByIdAndUpdate(request.params.id, card, { new: true })
+  
+  if(savedCard){
+    response.json(savedCard);
+  } else {
+    response.status(400)
+  }
 };

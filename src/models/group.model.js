@@ -1,28 +1,21 @@
 const mongoose = require("mongoose");
 
-const cardSchema = mongoose.Schema(
+const groupSchema = mongoose.Schema(
   {
-    title: {
-      type: String,
-    },
-    content: {
-      type: String,
-    },
+    title: String,
+    contains: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Card" | "Group",
+    }],
     document: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
     },
-    group: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Group",
-    }
-  },
-  {
-    timestamps: true,
+    indentation: [Number],
   }
 );
 
-cardSchema.set("toJSON", {
+groupSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -30,4 +23,4 @@ cardSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Card", cardSchema);
+module.exports = mongoose.model("Group", groupSchema);

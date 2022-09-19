@@ -16,6 +16,12 @@ const documentSchema = mongoose.Schema({
       ref: "Card",
     },
   ],
+  editorCardsAndGroups: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Card" | "Group",
+    },
+  ],
   parentSpace: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Document",

@@ -1,6 +1,8 @@
 const Document = require("../models/document.model");
+const Group = require("../models/group.model");
 const Card = require("../models/card.model");
-const { findByIdAndUpdate } = require("../models/document.model");
+
+const o = require("../utils/object_helper")
 /**
  * Get all documents with GET method from '/api/document'.
  *
@@ -22,9 +24,40 @@ module.exports.getAllDocuments = async (request, response) => {
  *
  * @return Document in JSON
  */
+
 module.exports.getDocumentByID = async (request, response) => {
   const document = await Document.findById(request.params.id).populate("outlinerCards").populate("editorCards");
+
   if (document) {
+    
+    // routine to check editorCardsAndGroups is aligned with editorCards
+    
+    let ids = o.objectListToArray(document.editorCardsAndGroups)
+    // console.log(ids);
+
+    let groupResponse = true;
+    let cardResponse = true;
+    let cardList = []
+
+
+    for (id_to_check of ids) {
+      // console.log(id_to_check);
+
+      groupResponse = await o.isGroup(id_to_check);
+      // console.log("group", groupResponse);
+      if (groupResponse) {
+        groupResponse.contains.forEach((id) => cardList.push(String(id)))
+      }
+
+      cardResponse = await o.isCard(id_to_check)
+      if (cardResponse) {
+        cardList.push(id_to_check)
+      }
+    }
+
+
+    // console.log(cardList);
+
     response.json(document);
   } else {
     response.status(404).end();
@@ -43,7 +76,7 @@ module.exports.getDocumentByID = async (request, response) => {
  */
 module.exports.createDocument = async (request, response) => {
   const body = request.body;
-  console.log(body);
+  // console.log(body);
 
   const document = new Document({
     title: body.title || "",
@@ -71,11 +104,7 @@ module.exports.deleteDocumentByID = async (request, response) => {
   let containedCards = Document.outlinerCards;
 
   if (containedCards) {
-    containedCards.forEach((card) => {
-      console.log(card.id);
-      Card.deleteCardById(card.id)
-    }
-    )
+    containedCards.forEach((card) => Card.deleteCardById(card.id))
   }
 
   response.status(204).send(`Document deleted : ${target}`);
@@ -97,6 +126,7 @@ module.exports.updateDocumentByID = async (request, response, next) => {
     parentSpace: body.parentSpace,
     outlinerCards: body.outlinerCards,
     editorCards: body.editorCards,
+    editorCardsAndGroups: body.editorCardsAndGroups
   };
   const savedDocument = await Document.findByIdAndUpdate(request.params.id, document, { new: true }).populate("outlinerCards").populate("editorCards")
 
