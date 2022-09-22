@@ -1,19 +1,24 @@
 const mongoose = require("mongoose");
 
-const groupSchema = mongoose.Schema(
-  {
-    title: String,
-    contains: [{
+const groupSchema = mongoose.Schema({
+  title: String,
+  contains: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Card" | "Group",
-    }],
-    document: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Document",
+      ref: "cardsAndGroups",
     },
-    indentation: [Number],
-  }
-);
+  ],
+  cardsAndGroups: {
+    type: String,
+    required: true,
+    enum: ["Card", "Group"],
+  },
+  document: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Document",
+  },
+  indentation: [Number],
+});
 
 groupSchema.set("toJSON", {
   transform: (document, returnedObject) => {

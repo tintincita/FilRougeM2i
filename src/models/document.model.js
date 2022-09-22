@@ -19,9 +19,14 @@ const documentSchema = mongoose.Schema({
   editorCardsAndGroups: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Card" | "Group",
+      refPath: "cardsAndGroups",
     },
   ],
+  cardsAndGroups: {
+    type: String,
+    required: true,
+    enum: ["Card", "Group"],
+  },
   parentSpace: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Document",
