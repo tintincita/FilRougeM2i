@@ -24,7 +24,6 @@ const documentSchema = mongoose.Schema({
   ],
   cardsAndGroups: {
     type: String,
-    required: true,
     enum: ["Card", "Group"],
   },
   parentSpace: {

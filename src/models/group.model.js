@@ -10,7 +10,6 @@ const groupSchema = mongoose.Schema({
   ],
   cardsAndGroups: {
     type: String,
-    required: true,
     enum: ["Card", "Group"],
   },
   document: {
