@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/card/62edce2cfd7f57810a012eb6
+GET http://localhost:3001/api/group/632c224db60ace2bd9e0ed17
