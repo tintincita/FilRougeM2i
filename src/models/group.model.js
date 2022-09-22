@@ -5,7 +5,7 @@ const groupSchema = mongoose.Schema({
   contains: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "cardsAndGroups",
+      refPath: "cardsAndGroups",
     },
   ],
   cardsAndGroups: {
