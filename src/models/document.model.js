@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const documentSchema = mongoose.Schema({
+const documentSchema = new mongoose.Schema({
   title: {
     type: String,
   },
@@ -18,14 +18,14 @@ const documentSchema = mongoose.Schema({
   ],
   editorCardsAndGroups: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: "cardsAndGroups",
+      item: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        refPath: 'editorCardsAndGroups.cardOrGroup',
+      },
+      cardOrGroup: String,
     },
   ],
-  cardsAndGroups: {
-    type: String,
-    enum: ["Card", "Group"],
-  },
   parentSpace: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Document",

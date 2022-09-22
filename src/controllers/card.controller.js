@@ -11,6 +11,7 @@ const Document = require("../models/document.model");
  */
 module.exports.getAllCards = async (request, response) => {
   const cards = await Card.find({});
+  console.log(cards);
   response.json(cards);
 };
 
@@ -63,9 +64,9 @@ module.exports.createCard = async (request, response) => {
     parentDocument.editorCards = parentDocument.editorCards.concat(
       savedCard.id
     );
-    parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
-      savedCard.id
-    );
+    // parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
+    //   savedCard.id
+    // );
 
     if (group) {
       // check if card is in group / include card in group 

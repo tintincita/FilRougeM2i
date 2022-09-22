@@ -4,14 +4,13 @@ const groupSchema = mongoose.Schema({
   title: String,
   contains: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "cardsAndGroups",
-    },
+      item: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "contains.cardOrGroup",
+      },
+      cardOrGroup: String,
+      },
   ],
-  cardsAndGroups: {
-    type: String,
-    enum: ["Card", "Group"],
-  },
   document: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Document",

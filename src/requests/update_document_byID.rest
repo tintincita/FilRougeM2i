@@ -1,6 +1,10 @@
-PUT  http://localhost:3001/api/document/63073baeea21e0c2acd42834
+PUT  http://localhost:3001/api/document/632c749e0f9a6e95f07c32db
 Content-Type: application/json
 
 {
-    "editorCardsAndGroups": ["63073c0dea21e0c2acd42849", "63073be0ea21e0c2acd42842"]
+    "editorCardsAndGroups":
+       [{ "item": "632c75046fd22a1dbb50b203", "cardOrGroup": "Card"},
+      { "item": "632c75096fd22a1dbb50b207", "cardOrGroup": "Card"},
+      { "item": "632c75096fd22a1dbb50b20b", "cardOrGroup": "Card"},
+      { "item": "632c750b6fd22a1dbb50b20f", "cardOrGroup": "Card"}]
 }

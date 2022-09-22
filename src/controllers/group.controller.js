@@ -11,7 +11,7 @@ const Document = require("../models/document.model");
  * @return All groups in JSON
  */
 module.exports.getAllGroups = async (request, response) => {
-    const groups = await Group.find({});
+    const groups = await Group.find({}).populate('contains.item');
     response.json(groups);
 };
 
@@ -43,7 +43,7 @@ module.exports.getGroupByID = async (request, response) => {
 module.exports.createGroup = async (request, response) => {
     // console.log(request.body);
     let { contains, document, indentation, title } = request.body;
-
+    console.log(contains);
     if (!contains) {
         response.status(400);
         throw "Missing cards, cannot create empty group";
@@ -68,15 +68,17 @@ module.exports.createGroup = async (request, response) => {
 
     const savedGroup = await group.save();
 
-    // *** updates newCardsAndGroups replacing new group in place contained cards
-    let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) => contains.includes(String(card)) ? savedGroup.id : card)
-    newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
-    parentDocument.editorCardsAndGroups = newCardsAndGroups;
-    await parentDocument.save();
+    ///////// taking this off until implementation of changed contains
+    // // *** updates newCardsAndGroups replacing new group in place contained cards
+    // let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) =>
+    //     contains.includes(String(card)) ? savedGroup.id : card)
+    // newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
+    // parentDocument.editorCardsAndGroups = newCardsAndGroups;
+    // await parentDocument.save();
 
     //  *** change group field within each contained card to savedGroup
     for (i = 0; i < contains.length; i++) {
-        await Card.findByIdAndUpdate(contains[0], {group: savedGroup.id})
+        await Card.findByIdAndUpdate(contains[0], { group: savedGroup.id })
     }
 
     response.status(201).json(savedGroup);
@@ -99,7 +101,7 @@ module.exports.deleteGroupByID = async (request, response) => {
     let newCardsAndGroups = []
 
     for (item of parentDoc.editorCardsAndGroups) {
-        if (item == groupToDelete.id) {
+        if (item == groupToDelete.item.id) {
             groupToDelete.contains.forEach((containedItem) => {
                 newCardsAndGroups.push(containedItem)
             })

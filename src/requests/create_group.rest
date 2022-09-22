@@ -2,7 +2,7 @@ POST  http://localhost:3001/api/group
 Content-Type: application/json
 
 {
-    "contains": ["6307820d831f26ba433fa609",
-      "63078217831f26ba433fa60d"],
-    "document": "63073baeea21e0c2acd42834"
+    "document": "63073baeea21e0c2acd42834",
+    "contains": [{"_id": "63073bd4ea21e0c2acd4283a", "cardOrGroup": "Card"},
+    { "cardOrGroup": "Card", "item":"63073bdaea21e0c2acd4283e"}]
 }

@@ -14,7 +14,8 @@ const o = require("../utils/object_helper");
 module.exports.getAllDocuments = async (request, response) => {
   const documents = await Document.find()
     .populate("outlinerCards")
-    .populate("editorCards");
+    .populate("editorCards")
+    .populate({path: "editorCardsAndGroups.item"});
   response.json(documents);
 };
 
@@ -31,7 +32,7 @@ module.exports.getDocumentByID = async (request, response) => {
   const document = await Document.findById(request.params.id)
     .populate("outlinerCards")
     .populate("editorCards")
-    .populate("editorCardsAndGroups");
+    .populate({path: 'editorCardsAndGroups.item'});
 
   if (document) {
     // routine to check editorCardsAndGroups is aligned with editorCards
