@@ -84,6 +84,7 @@ module.exports.createDocument = async (request, response) => {
     title: body.title || "",
     outlinerCards: [],
     editorCards: [],
+    editorCardsAndGroups: [],
   });
 
   const savedDocument = await document.save();
