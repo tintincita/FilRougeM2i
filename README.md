@@ -11,13 +11,14 @@ A React frontend is available at [https://github.com/tintincita/FilRougeM2i-Fron
 
 # API
 
-## Table
+## Tables
 
 user  
-document  
+document
+group
 card
 
-## Route
+## Routes
 
 ### Create a record
 
