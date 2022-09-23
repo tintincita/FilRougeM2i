@@ -25,12 +25,12 @@ module.exports.getAllGroups = async (request, response) => {
  * @return group in JSON
  */
 module.exports.getGroupByID = async (request, response) => {
-    const group = await Group.findById(request.params.id);
-    if (group) {
-        response.json(group);
-    } else {
-        response.status(404).end();
-    }
+  const group = await Group.findById(request.params.id);
+  if (group) {
+    response.json(group);
+  } else {
+    response.status(404).end();
+  }
 };
 
 /**
@@ -42,6 +42,7 @@ module.exports.getGroupByID = async (request, response) => {
  * @return Created group in JSON
  */
 module.exports.createGroup = async (request, response) => {
+
     let { contains, document, indentation, title } = request.body;
     if (!contains) {
         response.status(400);
@@ -85,6 +86,7 @@ module.exports.createGroup = async (request, response) => {
  * @return Status 204
  */
 module.exports.deleteGroupByID = async (request, response) => {
+
     const target = request.params.id;
     const groupToDelete = await Group.findById(target)
     let parentDoc = await Document.findById(groupToDelete.document)
@@ -113,6 +115,7 @@ const ReplaceGroupWithCardsContained = (parentDoc, groupToDelete) => {
     return newCardsAndGroups
 }
 
+
 /**
  * Update group with PUT method from '/api/group/:id'
  *
@@ -122,6 +125,7 @@ const ReplaceGroupWithCardsContained = (parentDoc, groupToDelete) => {
  * @return Status 200
  */
 module.exports.updateGroupByID = (request, response, next) => {
+
     const { contains, document, indentation, title } = request.body
     const target = request.params.id
 
