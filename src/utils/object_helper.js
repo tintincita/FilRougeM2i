@@ -1,16 +1,21 @@
-const Group = require("../models/group.model");
-const Card = require("../models/card.model");
-
-// returns a promise
-module.exports.isGroup = (an_id) => {
-  return Group.findById(an_id).then((res) => res);
-};
-
-// returns a promise
-module.exports.isCard = (an_id) => {
-  return Card.findById(an_id).then((res) => res);
-};
-
+/**
+ * obkectListToArray.
+ * @param {*} object 
+ * @returns array of String ids
+ */
 module.exports.objectListToArray = (object) => {
   return Object.values(object).map((id) => String(id));
 };
+
+/**
+ * addToArray. 
+ * @param {*} array : array, can be empty
+ * @param {*} object : an array with one object
+ * 
+ * @return array containing both array and object
+ */
+module.exports.addToArray = (array, object) => {
+  array?
+  Array.prototype.push.apply(array, object)
+  : array = object
+}

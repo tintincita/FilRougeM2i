@@ -14,7 +14,7 @@ const o = require("../utils/object_helper");
 module.exports.getAllDocuments = async (request, response) => {
   const documents = await Document.find()
     .populate("outlinerCards")
-    .populate({path: "editorCardsAndGroups.item"});
+    .populate("editorCardsAndGroups.item");
   response.json(documents);
 };
 
@@ -51,7 +51,6 @@ module.exports.getDocumentByID = async (request, response) => {
  */
 module.exports.createDocument = async (request, response) => {
   const body = request.body;
-  // console.log(body);
 
   const document = new Document({
     title: body.title || "",
@@ -74,17 +73,20 @@ module.exports.createDocument = async (request, response) => {
  */
 module.exports.deleteDocumentByID = async (request, response) => {
   const target = request.params.id;
-  await Document.findByIdAndRemove(target);
+  let documentToDelete = await Document.findById(target)
+  console.log(documentToDelete);
+  if (documentToDelete) {
+    let containedCards = documentToDelete.outlinerCards;
+    let promiseArray = containedCards.map(card => Card.deleteCardById(card.id))
 
-  let containedCards = Document.outlinerCards;
-
-  // can't have deleteCardById await. do we need to add something to ensure
-  // response is not sent before all cards are deleted?
-  if (containedCards) {
-    containedCards.forEach((card) => Card.deleteCardById(card.id));
+    Promise.all(promiseArray)
+      .then(Document.findByIdAndRemove(target))
+      .then(response.status(204)
+        .send(`Document deleted : ${target}`))
+  } else {
+    console.log("we there?");
+    response.status(400).end();
   }
-
-  response.status(204).send(`Document deleted : ${target}`);
 };
 
 /**
@@ -115,6 +117,6 @@ module.exports.updateDocumentByID = async (request, response, next) => {
   if (savedDocument) {
     response.json(savedDocument);
   } else {
-    response.status(400);
+    response.status(400).end();
   }
 };

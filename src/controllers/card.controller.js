@@ -11,7 +11,6 @@ const Document = require("../models/document.model");
  */
 module.exports.getAllCards = async (request, response) => {
   const cards = await Card.find({});
-  console.log(cards);
   response.json(cards);
 };
 
@@ -48,7 +47,6 @@ module.exports.createCard = async (request, response) => {
   const parentDocument = await Document.findById(document);
 
   if (parentDocument) {
-    // console.log(request.body);
     const card = new Card({
       title: title || "titre",
       content: content || "contenu",
@@ -58,14 +56,14 @@ module.exports.createCard = async (request, response) => {
 
     const savedCard = await card.save();
 
-    const newEditorCardsAndGroupsItem = [{item: savedCard.id, cardOrGroup: "Card"}]
+    const newEditorCardsAndGroupsItem = [{ item: savedCard.id, cardOrGroup: "Card" }]
 
     if (parentDocument.outlinerCards) {
       // assumption: if outlinerCards is empty then editorCardsAndGroups is too.
       parentDocument.outlinerCards = parentDocument.outlinerCards.concat(
         savedCard.id
       );
-      Array.prototype.push.apply(parentDocument.editorCardsAndGroups,newEditorCardsAndGroupsItem);
+      Array.prototype.push.apply(parentDocument.editorCardsAndGroups, newEditorCardsAndGroupsItem);
     } else {
       parentDocument.outlinerCards = [savedCard.id];
       parentDocument.editorCardsAndGroups = newEditorCardsAndGroupsItem;
@@ -97,23 +95,22 @@ module.exports.createCard = async (request, response) => {
  */
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
-  let cardToDelete = Card.findById(target)
+  let cardToDelete = await Card.findById(target)
 
-  await Document.updateOne(
-    { outlinerCards: target },
-    { $pull: { outlinerCards: target} }
+  await Document.findByIdAndUpdate(cardToDelete.document,
+    { $pull: { outlinerCards: target } }
   );
-
-  let editorCardsAndGroupsItemToDelete = [{item: cardToDelete.id, cardOrGroup: "Card"}];
-
+  
+  let editorCardsAndGroupsItemToDelete = { item: cardToDelete.id, cardOrGroup: "Card" };
+  
   if (cardToDelete.group) {
-    await Group.updateOne(
-      { contains: target },
+    await Group.findByIdAndUpdate(
+      cardToDelete.group,
       { $pull: { contains: target } });
-  } else {
-    await Document.updateOne(
-      { editorCardsAndGroups: target },
-      { $pull: { editorCardsAndGroups: target } })
+    } else {
+    await Document.findByIdAndUpdate(
+      cardToDelete.document,
+      { $pull: { editorCardsAndGroups: editorCardsAndGroupsItemToDelete } })
   }
 
   await Card.findByIdAndRemove(target);
@@ -151,8 +148,8 @@ module.exports.updateCardByID = async (request, response, next) => {
   }
 
   const savedCard = await Card.findByIdAndUpdate(request.params.id, card, { new: true })
-  
-  if(savedCard){
+
+  if (savedCard) {
     response.json(savedCard);
   } else {
     response.status(400)

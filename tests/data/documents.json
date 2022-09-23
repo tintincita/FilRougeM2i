@@ -1,0 +1,35 @@
+[
+  {
+    "title": "I am a document",
+    "outlinerCards": [
+      "632d67001ab1b585e68c0fae",
+      "632d69feb1cbea59e4080780",
+      "632d6a2ab1cbea59e4080787",
+      "632d6b60b1cbea59e408078e",
+      "632d6b68b1cbea59e4080792"
+    ],
+    "editorCardsAndGroups": [
+      {
+        "item": "632d67001ab1b585e68c0fae",
+        "cardOrGroup": "Card"
+      },
+      {
+        "item": "632d69feb1cbea59e4080780",
+        "cardOrGroup": "Card"
+      },
+      {
+        "item": "632d6a2ab1cbea59e4080787",
+        "cardOrGroup": "Card"
+      },
+      {
+        "item": "632d6b60b1cbea59e408078e",
+        "cardOrGroup": "Card"
+      },
+      {
+        "item": "632d6b68b1cbea59e4080792",
+        "cardOrGroup": "Card"
+      }
+    ],
+    "id": "632d66ee1ab1b585e68c0fab"
+  }
+]

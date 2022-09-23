@@ -4,12 +4,9 @@ const groupSchema = mongoose.Schema({
   title: String,
   contains: [
     {
-      item: {
-        type: mongoose.Schema.Types.ObjectId,
-        refPath: "contains.cardOrGroup",
-      },
-      cardOrGroup: String,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Card",
+    }
   ],
   document: {
     type: mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,7 @@
 const Group = require("../models/group.model");
 const Card = require("../models/card.model");
 const Document = require("../models/document.model");
+const { addToArray } = require("../utils/object_helper");
 
 /**
  * Get all Groups with GET method from '/api/group'.
@@ -11,7 +12,7 @@ const Document = require("../models/document.model");
  * @return All groups in JSON
  */
 module.exports.getAllGroups = async (request, response) => {
-    const groups = await Group.find({}).populate('contains.item');
+    const groups = await Group.find({}).populate('contains');
     response.json(groups);
 };
 
@@ -41,9 +42,7 @@ module.exports.getGroupByID = async (request, response) => {
  * @return Created group in JSON
  */
 module.exports.createGroup = async (request, response) => {
-    // console.log(request.body);
     let { contains, document, indentation, title } = request.body;
-    console.log(contains);
     if (!contains) {
         response.status(400);
         throw "Missing cards, cannot create empty group";
@@ -68,20 +67,13 @@ module.exports.createGroup = async (request, response) => {
 
     const savedGroup = await group.save();
 
-    ///////// taking this off until implementation of changed contains
-    // // *** updates newCardsAndGroups replacing new group in place contained cards
-    // let newCardsAndGroups = parentDocument.editorCardsAndGroups.map((card) =>
-    //     contains.includes(String(card)) ? savedGroup.id : card)
-    // newCardsAndGroups = newCardsAndGroups.filter((v, i, a) => a.indexOf(v) === i);
-    // parentDocument.editorCardsAndGroups = newCardsAndGroups;
-    // await parentDocument.save();
+    //  *** update group field within each contained card
+    let promiseArray = contains.map(item =>
+        Card.findByIdAndUpdate(item, { group: savedGroup.id }))
 
-    //  *** change group field within each contained card to savedGroup
-    for (i = 0; i < contains.length; i++) {
-        await Card.findByIdAndUpdate(contains[0], { group: savedGroup.id })
-    }
-
-    response.status(201).json(savedGroup);
+    Promise.all(promiseArray).then(
+        response.status(201).json(savedGroup)
+    )
 };
 
 /**
@@ -95,25 +87,31 @@ module.exports.createGroup = async (request, response) => {
 module.exports.deleteGroupByID = async (request, response) => {
     const target = request.params.id;
     const groupToDelete = await Group.findById(target)
-
-    // *** replace group with cards (contains) in document editorCardsAndGroups
     let parentDoc = await Document.findById(groupToDelete.document)
-    let newCardsAndGroups = []
 
-    for (item of parentDoc.editorCardsAndGroups) {
-        if (item == groupToDelete.item.id) {
-            groupToDelete.contains.forEach((containedItem) => {
-                newCardsAndGroups.push(containedItem)
-            })
-        } else {
-            newCardsAndGroups.push(item)
-        }
-    }
+    let newCardsAndGroups = ReplaceGroupWithCardsContained(parentDoc, groupToDelete)
 
     await Document.findByIdAndUpdate(groupToDelete.document, { editorCardsAndGroups: newCardsAndGroups }, { new: true })
     await Group.findByIdAndRemove(target);
     response.status(204).send(`Group deleted : ${target}`);
 };
+
+const ReplaceGroupWithCardsContained = (parentDoc, groupToDelete) => {
+    let newCardsAndGroups = []
+    let cardsAndGroupsItem = [];
+
+    for (element of parentDoc.editorCardsAndGroups) {
+        if (element.item == groupToDelete.id) {
+            groupToDelete.contains.forEach((containedItem) => {
+                cardsAndGroupsItem = [{ item: containedItem, cardOrGroup: 'Card' }]
+                newCardsAndGroups = addToArray(newCardsAndGroups, cardsAndGroupsItem)
+            })
+        } else {
+            newCardsAndGroups = addToArray(newCardsAndGroups, element)
+        }
+    }
+    return newCardsAndGroups
+}
 
 /**
  * Update group with PUT method from '/api/group/:id'
@@ -127,7 +125,7 @@ module.exports.updateGroupByID = (request, response, next) => {
     const { contains, document, indentation, title } = request.body
     const target = request.params.id
 
-    console.log("contains.lenght", contains.length);
+    console.log("contains.length", contains.length);
 
     const group = {
         contains: contains,

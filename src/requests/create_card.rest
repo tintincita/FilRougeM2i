@@ -2,6 +2,6 @@ POST  http://localhost:3001/api/card
 Content-Type: application/json
 
 {
-    "content": "card",
-    "document": "632d528db6505d5538540fba"
+    "content": "card, another",
+    "document": "632d83de206e10f1f2255f72"
 }

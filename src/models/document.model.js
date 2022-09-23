@@ -20,7 +20,8 @@ const documentSchema = new mongoose.Schema({
       cardOrGroup: {
         type: String,
         enum: ['Card', 'Group']
-      }
+      },
+      _id: false,
     },
   ],
   parentSpace: {

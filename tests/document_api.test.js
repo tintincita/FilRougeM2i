@@ -126,7 +126,7 @@ describe('cards can be moved within doc', () => {
             cardArray.push(cardObject.id)
             await cardObject.save()
         }
-        docToChange.editorCards = cardArray
+        docToChange.editorCardsAndGroups = cardArray
         docToChange.outlinerCards = cardArray
 
         await api
@@ -156,9 +156,9 @@ describe('cards can be moved within doc', () => {
     test('change order in editorCards', async () => {
         const docsAtStart = await helper.docsInDb()
         const docToChange = docsAtStart[0]
-        const originalArray = docToChange.editorCards;
+        const originalArray = docToChange.editorCardsAndGroups;
         const newArray = [originalArray[1], originalArray[2], originalArray[0]]
-        docToChange.editorCards = newArray
+        docToChange.editorCardsAndGroups = newArray
 
         await api
             .put(`/api/document/${docToChange.id}`)
@@ -169,7 +169,7 @@ describe('cards can be moved within doc', () => {
         const docsAtEnd = await helper.docsInDb()
 
         expect(docsAtStart.length).toBe(docsAtEnd.length)
-        expect(docsAtEnd[0].editorCards).toStrictEqual(newArray)
+        expect(docsAtEnd[0].editorCardsAndGroups).toStrictEqual(newArray)
     })
 })
 
