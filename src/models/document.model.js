@@ -10,12 +10,6 @@ const documentSchema = new mongoose.Schema({
       ref: "Card",
     },
   ],
-  editorCards: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
-    },
-  ],
   editorCardsAndGroups: [
     {
       item: {
@@ -23,7 +17,10 @@ const documentSchema = new mongoose.Schema({
         required: true,
         refPath: 'editorCardsAndGroups.cardOrGroup',
       },
-      cardOrGroup: String,
+      cardOrGroup: {
+        type: String,
+        enum: ['Card', 'Group']
+      }
     },
   ],
   parentSpace: {

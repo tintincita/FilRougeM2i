@@ -48,7 +48,7 @@ module.exports.createCard = async (request, response) => {
   const parentDocument = await Document.findById(document);
 
   if (parentDocument) {
-    console.log(request.body);
+    // console.log(request.body);
     const card = new Card({
       title: title || "titre",
       content: content || "contenu",
@@ -58,26 +58,33 @@ module.exports.createCard = async (request, response) => {
 
     const savedCard = await card.save();
 
-    parentDocument.outlinerCards = parentDocument.outlinerCards.concat(
-      savedCard.id
-    );
-    parentDocument.editorCards = parentDocument.editorCards.concat(
-      savedCard.id
-    );
-    // parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
-    //   savedCard.id
-    // );
+    const newEditorCardsAndGroupsItem = [{item: savedCard.id, cardOrGroup: "Card"}]
+
+    if (parentDocument.outlinerCards) {
+      // assumption: if outlinerCards is empty then editorCardsAndGroups is too.
+      parentDocument.outlinerCards = parentDocument.outlinerCards.concat(
+        savedCard.id
+      );
+      Array.prototype.push.apply(parentDocument.editorCardsAndGroups,newEditorCardsAndGroupsItem);
+    } else {
+      parentDocument.outlinerCards = [savedCard.id];
+      parentDocument.editorCardsAndGroups = newEditorCardsAndGroupsItem;
+    }
+
 
     if (group) {
-      // check if card is in group / include card in group 
+      // Current workflow assumes cards are not in group when created.
+      // If this changes then:
+      // TODO: check if card is in group / include card in group 
     }
 
     await parentDocument.save();
+    // TO ADD?: if parentDocument not updated correctly; delete card.
 
     response.status(201).json(savedCard);
   } else {
     response.status(400);
-    throw "Missing document, cannot create orphan card";
+    throw "Missing document id, cannot create orphan card";
   }
 };
 /**
@@ -93,9 +100,11 @@ module.exports.deleteCardByID = async (request, response) => {
   let cardToDelete = Card.findById(target)
 
   await Document.updateOne(
-    { outlinerCards: target, editorCards: target },
-    { $pull: { outlinerCards: target, editorCards: target } }
+    { outlinerCards: target },
+    { $pull: { outlinerCards: target} }
   );
+
+  let editorCardsAndGroupsItemToDelete = [{item: cardToDelete.id, cardOrGroup: "Card"}];
 
   if (cardToDelete.group) {
     await Group.updateOne(
@@ -108,7 +117,7 @@ module.exports.deleteCardByID = async (request, response) => {
   }
 
   await Card.findByIdAndRemove(target);
-  response.status(204).send(`Card deleted : ${target}`);
+  response.status(204).send(`Card deleted : ${editorCardsAndGroupsItemToDelete}`);
 };
 
 /**

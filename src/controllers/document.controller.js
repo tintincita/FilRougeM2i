@@ -14,7 +14,6 @@ const o = require("../utils/object_helper");
 module.exports.getAllDocuments = async (request, response) => {
   const documents = await Document.find()
     .populate("outlinerCards")
-    .populate("editorCards")
     .populate({path: "editorCardsAndGroups.item"});
   response.json(documents);
 };
@@ -31,36 +30,9 @@ module.exports.getAllDocuments = async (request, response) => {
 module.exports.getDocumentByID = async (request, response) => {
   const document = await Document.findById(request.params.id)
     .populate("outlinerCards")
-    .populate("editorCards")
-    .populate({path: 'editorCardsAndGroups.item'});
+    .populate("editorCardsAndGroups.item");
 
   if (document) {
-    // routine to check editorCardsAndGroups is aligned with editorCards
-
-    let ids = o.objectListToArray(document.editorCardsAndGroups);
-    // console.log(ids);
-
-    let groupResponse = true;
-    let cardResponse = true;
-    let cardList = [];
-
-    for (id_to_check of ids) {
-      // console.log(id_to_check);
-
-      groupResponse = await o.isGroup(id_to_check);
-      // console.log("group", groupResponse);
-      if (groupResponse) {
-        groupResponse.contains.forEach((id) => cardList.push(String(id)));
-      }
-
-      cardResponse = await o.isCard(id_to_check);
-      if (cardResponse) {
-        cardList.push(id_to_check);
-      }
-    }
-
-    // console.log(cardList);
-
     response.json(document);
   } else {
     response.status(404).end();
@@ -84,7 +56,7 @@ module.exports.createDocument = async (request, response) => {
   const document = new Document({
     title: body.title || "",
     outlinerCards: [],
-    editorCards: [],
+    editorCardsAndGroups: [],
   });
 
   const savedDocument = await document.save();
@@ -106,6 +78,8 @@ module.exports.deleteDocumentByID = async (request, response) => {
 
   let containedCards = Document.outlinerCards;
 
+  // can't have deleteCardById await. do we need to add something to ensure
+  // response is not sent before all cards are deleted?
   if (containedCards) {
     containedCards.forEach((card) => Card.deleteCardById(card.id));
   }
@@ -128,7 +102,6 @@ module.exports.updateDocumentByID = async (request, response, next) => {
     title: body.title,
     parentSpace: body.parentSpace,
     outlinerCards: body.outlinerCards,
-    editorCards: body.editorCards,
     editorCardsAndGroups: body.editorCardsAndGroups,
   };
   const savedDocument = await Document.findByIdAndUpdate(
@@ -137,7 +110,7 @@ module.exports.updateDocumentByID = async (request, response, next) => {
     { new: true }
   )
     .populate("outlinerCards")
-    .populate("editorCards");
+    .populate("editorCardsAndGroups.item");
 
   if (savedDocument) {
     response.json(savedDocument);

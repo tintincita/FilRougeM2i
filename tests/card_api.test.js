@@ -24,7 +24,6 @@ beforeEach(async () => {
     cardObject.document = doc.id
     savedCard = await cardObject.save()
     doc.outlinerCards.push(savedCard.id)
-    doc.editorCards.push(savedCard.id)
     doc.editorCardsAndGroups.push(savedCard.id)
   }
   await Document.findByIdAndUpdate(doc.id, 
