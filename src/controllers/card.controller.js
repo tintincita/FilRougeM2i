@@ -89,7 +89,17 @@ module.exports.createCard = async (request, response) => {
  */
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
-  let cardToDelete = Card.findById(target);
+
+  // Get the card data
+  let cardToDelete = {};
+
+  Card.findById(target, function (err, docs) {
+    if (err) {
+      console.log("error", err);
+    } else {
+      cardToDelete = docs;
+    }
+  });
 
   // Delete the card reference in outlinerCards
   await Document.updateOne(
@@ -104,6 +114,11 @@ module.exports.deleteCardByID = async (request, response) => {
   );
 
   // TODO Store the group id from the card
+  let groupToDelete = "";
+
+  if (cardToDelete.group !== null && cardToDelete.group !== undefined) {
+    groupToDelete = cardToDelete.group.toString();
+  }
 
   // Delete the group reference in the card if there is one
   if (cardToDelete.group !== null) {
@@ -111,6 +126,17 @@ module.exports.deleteCardByID = async (request, response) => {
       { contains: target },
       { $pull: { contains: target } }
     );
+  }
+
+  // Get the group data
+  if (groupToDelete !== "") {
+    Group.findById(groupToDelete, function (err, docs) {
+      if (err) {
+        console.log("error", err);
+      } else {
+        console.log("docs.contains.length", docs.contains.length);
+      }
+    });
   }
 
   // TODO Delete the group if there is only one card in it
