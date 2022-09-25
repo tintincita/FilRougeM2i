@@ -91,19 +91,34 @@ module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
   let cardToDelete = Card.findById(target);
 
+  // Delete the card reference in outlinerCards
   await Document.updateOne(
-    { outlinerCards: target, editorCards: target },
-    { $pull: { outlinerCards: target, editorCards: target } }
+    { outlinerCards: target },
+    { $pull: { outlinerCards: target } }
   );
 
-  if (cardToDelete.group) {
+  // Delete the card reference in editorCards
+  await Document.updateOne(
+    { editorCards: target },
+    { $pull: { editorCards: target } }
+  );
+
+  // TODO Store the group id from the card
+
+  // Delete the group reference in the card if there is one
+  if (cardToDelete.group !== null) {
     await Group.updateOne(
       { contains: target },
       { $pull: { contains: target } }
     );
   }
 
-  if (!cardToDelete.group) {
+  // TODO Delete the group if there is only one card in it
+
+  // TODO Update editorCardsAndGroups
+
+  // Delete the card reference in editorCardsAndGroups if the card is not part of a group
+  if (cardToDelete.group === null) {
     await Document.updateOne(
       { editorCardsAndGroups: target },
       { $pull: { editorCardsAndGroups: target } }
