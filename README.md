@@ -2,11 +2,11 @@
 
 # Description
 
-Backend server built with Express, MongoDB designed to work with the frontend application FilRougeM2i - Frontend available at https://github.com/tintincita/FilRougeM2i-Front
+Backend server built with Express and MongoDB designed to work with the frontend application FilRougeM2i - Frontend available at https://github.com/tintincita/FilRougeM2i-Front
 
 # Usage
 
-To run the server
+To run the server : 
 
 - Open a terminal at the root of the repository.  
 - Run the `'npm i'` command
