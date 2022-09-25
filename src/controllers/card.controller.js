@@ -1,5 +1,6 @@
 const Card = require("../models/card.model");
 const Document = require("../models/document.model");
+const Group = require("../models/group.model");
 
 /**
  * Get all cards with GET method from '/api/card'.
@@ -51,8 +52,8 @@ module.exports.createCard = async (request, response) => {
     const card = new Card({
       title: title || "titre",
       content: content || "contenu",
-      document: document,
-      group: group,
+      document: document || null,
+      group: group || null,
     });
 
     const savedCard = await card.save();
@@ -63,12 +64,11 @@ module.exports.createCard = async (request, response) => {
     parentDocument.editorCards = parentDocument.editorCards.concat(
       savedCard.id
     );
-    parentDocument.editorCardsAndGroups = parentDocument.editorCardsAndGroups.concat(
-      savedCard.id
-    );
+    parentDocument.editorCardsAndGroups =
+      parentDocument.editorCardsAndGroups.concat(savedCard.id);
 
     if (group) {
-      // check if card is in group / include card in group 
+      // check if card is in group / include card in group
     }
 
     await parentDocument.save();
@@ -89,7 +89,7 @@ module.exports.createCard = async (request, response) => {
  */
 module.exports.deleteCardByID = async (request, response) => {
   const target = request.params.id;
-  let cardToDelete = Card.findById(target)
+  let cardToDelete = Card.findById(target);
 
   await Document.updateOne(
     { outlinerCards: target, editorCards: target },
@@ -99,11 +99,15 @@ module.exports.deleteCardByID = async (request, response) => {
   if (cardToDelete.group) {
     await Group.updateOne(
       { contains: target },
-      { $pull: { contains: target } });
-  } else {
+      { $pull: { contains: target } }
+    );
+  }
+
+  if (!cardToDelete.group) {
     await Document.updateOne(
       { editorCardsAndGroups: target },
-      { $pull: { editorCardsAndGroups: target } })
+      { $pull: { editorCardsAndGroups: target } }
+    );
   }
 
   await Card.findByIdAndRemove(target);
@@ -128,10 +132,10 @@ module.exports.updateCardByID = async (request, response, next) => {
     group: body.group,
   };
 
-  const oldCard = Card.findById(request.params.id)
+  const oldCard = Card.findById(request.params.id);
 
   if (oldCard.document != card.document) {
-    console.log("card changed doc")
+    console.log("card changed doc");
     // need to update doc (old and new)
   }
 
@@ -140,11 +144,13 @@ module.exports.updateCardByID = async (request, response, next) => {
     // need to update group (old and new)
   }
 
-  const savedCard = await Card.findByIdAndUpdate(request.params.id, card, { new: true })
-  
-  if(savedCard){
+  const savedCard = await Card.findByIdAndUpdate(request.params.id, card, {
+    new: true,
+  });
+
+  if (savedCard) {
     response.json(savedCard);
   } else {
-    response.status(400)
+    response.status(400);
   }
 };

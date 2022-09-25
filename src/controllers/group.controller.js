@@ -78,7 +78,7 @@ module.exports.createGroup = async (request, response) => {
 
   //  *** change group field within each contained card to savedGroup
   for (i = 0; i < contains.length; i++) {
-    await Card.findByIdAndUpdate(contains[0], { group: savedGroup.id });
+    await Card.findByIdAndUpdate(contains[i], { group: savedGroup.id });
   }
 
   response.status(201).json(savedGroup);
