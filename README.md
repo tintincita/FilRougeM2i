@@ -1,20 +1,29 @@
 # FilRougeM2i - Backend
 
+# Description
+
+Backend server built with Express, MongoDB designed to work with the frontend application FilRougeM2i - Frontend available at https://github.com/tintincita/FilRougeM2i-Front
+
 # Usage
+
+To run the server
 
 - Open a terminal at the root of the repository.  
 - Run the `'npm i'` command
 - Request the `.env` file from the repository owner and put it into `'/src/config/'`
 - Run the `'npm start'` command
 
+Get and run the frontend application available at https://github.com/tintincita/FilRougeM2i-Front
+
 # API 
 
-## Table
+## Tables
 user  
-document  
+document
 card
+group
 
-## Route
+## Routes
 ### Create a record  
 Use the POST method from  
 `\<server\>/api/\<table\>`
