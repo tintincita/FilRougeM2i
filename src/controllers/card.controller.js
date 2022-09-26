@@ -48,7 +48,6 @@ module.exports.createCard = async (request, response) => {
   const parentDocument = await Document.findById(document);
 
   if (parentDocument) {
-    console.log(request.body);
     const card = new Card({
       title: title || "titre",
       content: content || "contenu",
@@ -79,6 +78,10 @@ module.exports.createCard = async (request, response) => {
     throw "Missing document, cannot create orphan card";
   }
 };
+
+// For some reason the declaration of this cariable needs to be outside the scope of the deleteCardByID function ...
+let groupData = {};
+
 /**
  * Delete card by ID with DELETE method from '/api/card/:id'
  *
@@ -113,7 +116,7 @@ module.exports.deleteCardByID = async (request, response) => {
     { $pull: { editorCards: target } }
   );
 
-  // TODO Store the group id from the card
+  // Store the group id from the card
   let groupToDelete = "";
 
   if (cardToDelete.group !== null && cardToDelete.group !== undefined) {
@@ -134,14 +137,24 @@ module.exports.deleteCardByID = async (request, response) => {
       if (err) {
         console.log("error", err);
       } else {
-        console.log("docs.contains.length", docs.contains.length);
+        groupData = docs;
       }
     });
   }
 
-  // TODO Delete the group if there is only one card in it
+  // If only one card remains in the group
+  if (groupData.contains.length === 1) {
+    // TODO Get the group position in editorCardsAndGroups
 
-  // TODO Update editorCardsAndGroups
+    // Delete the group
+    await Group.findByIdAndRemove(groupToDelete);
+
+    // Delete the group in editorCardsAndGroups
+    await Document.updateOne(
+      { editorCardsAndGroups: groupToDelete },
+      { $pull: { editorCardsAndGroups: groupToDelete } }
+    );
+  }
 
   // Delete the card reference in editorCardsAndGroups if the card is not part of a group
   if (cardToDelete.group === null) {
