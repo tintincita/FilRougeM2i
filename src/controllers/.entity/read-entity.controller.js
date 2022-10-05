@@ -1,14 +1,11 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.readEntity = async (entity, model, request, response) => {
+module.exports.readEntity = async (model, entity, entityID, response) => {
   try {
-    const entityID = request.params.id;
-    const entityToRead = await model.findById(entityID);
-    
-    if (entityToRead) {
-      response.send(entityToRead);
+    if (entity) {
+      response.send(entity);
     } else {
-      response.status(404).send(message.error.readEntity(entity, entityID));
+      response.status(404).send(message.error.readEntity(model.modelName, entityID));
     }
   } catch (error) {
     response.status(500).send(error);

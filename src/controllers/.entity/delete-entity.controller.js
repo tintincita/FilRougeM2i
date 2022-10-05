@@ -1,15 +1,12 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.deleteEntity = async (entity, model, request, response) => {
+module.exports.deleteEntity = async (model, entity, entityID, response) => {
   try {
-    const entityID = request.params.id;
-    const entityToDelete = await model.findById(entityID);
-
-    if (entityToDelete) {
+    if (entity) {
       await model.findByIdAndRemove(entityID);
-      response.send(entityToDelete);
+      response.send(message.success.deleteEntity(model.modelName, entity));
     } else {
-      response.send(message.error.deleteEntity(entity, entityID));
+      response.send(message.error.deleteEntity(model.modelName, entityID));
     }
   } catch (error) {
     response.status(500).send(error);

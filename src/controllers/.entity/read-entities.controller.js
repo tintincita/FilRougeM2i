@@ -1,13 +1,11 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.readEntities = async (model, response) => {
+module.exports.readEntities = async (model, entities, response) => {
   try {
-    const entitiesToRead = await model.find({});
-
-    if (entitiesToRead) {
-      response.json(entitiesToRead);
+    if (entities) {
+      response.json(entities);
     } else {
-      response.status(500).json(message.error.readEntities(entity));
+      response.status(500).json(message.error.readEntities(model.modelName));
     }
   } catch (error) {
     response.status(500).json(error);

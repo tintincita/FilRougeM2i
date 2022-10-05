@@ -1,16 +1,21 @@
 module.exports.message = {
+  success: {
+    deleteEntity: (modelName, entity) => {
+      return `Success: ${modelName} deleted: ${entity}`;
+    },
+  },
   error: {
-    createEntity: (entity) => {
-      return `Error: Can't create ${entity}.`;
+    createEntity: (modelName) => {
+      return `Error: Can't create ${modelName}.`;
     },
-    readEntities: (entity) => {
-      return `Error: ${entity}s not found.`;
+    readEntities: (modelName) => {
+      return `Error: ${modelName}s not found.`;
     },
-    readEntity: (entity, entityID) => {
-      return `Error: ${entity} not found: "${entityID}".`;
+    readEntity: (modelName, entityID) => {
+      return `Error: ${modelName} not found: "${entityID}".`;
     },
-    deleteEntity: (entity, entityID) => {
-      return `Error: ${entity} can't be deleted: "${entityID}".`;
+    deleteEntity: (modelName, entityID) => {
+      return `Error: ${modelName} can't be deleted: "${entityID}".`;
     },
   },
 };

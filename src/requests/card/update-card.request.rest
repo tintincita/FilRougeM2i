@@ -1,7 +1,7 @@
-PUT  http://localhost:3001/api/card/633c1511207cb1030734adda
+PUT  http://localhost:3001/api/card/633dafe6bb40ad3601b806d9
 Content-Type: application/json
 
 {
-    "title": "cece",
-    "content": "!@"
+    "title": "QAQA",
+    "content": "432"
 }

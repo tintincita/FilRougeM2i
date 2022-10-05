@@ -1,16 +1,15 @@
-const { getBody } = require("../../structures/get-body.structure");
 const { message } = require("../../structures/messages.structure");
 
-module.exports.createEntity = (entity, model, request, response) => {
+module.exports.createEntity = (model, entity, response) => {
   try {
-    const entityToCreate = new model(getBody(entity, request));
-
-    if (entityToCreate) {
-      model.create(entityToCreate, (error, entityToCreate) => {
+    if (entity) {
+      model.create(entity, (error, newEntity) => {
         if (error) {
-          response.status(500).send(message.error.createEntity(entity));
+          response
+            .status(500)
+            .send(message.error.createEntity(model.modelName));
         } else {
-          response.send(entityToCreate);
+          response.send(newEntity);
         }
       });
     } else {
