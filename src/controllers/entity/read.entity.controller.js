@@ -1,4 +1,8 @@
+const terminal = require("../../middlewares/terminal.middlewares");
+
+
 module.exports.getEntityByID = async (model, request, response) => {
+  terminal.log("test ME Im famous");
   try {
     const entityID = request.params.id;
     const entity = await model.findById(entityID);

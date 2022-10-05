@@ -1,8 +1,10 @@
+_TODO.txt
+
 **/node_modules
 **/.DS_Store
 **/coverage
 **/.vscode
 
-src/.env
+.env
 
 .DS_Store

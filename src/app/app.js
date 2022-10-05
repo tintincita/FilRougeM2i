@@ -8,6 +8,7 @@ const documentRouter = require("../routes/document.routes");
 const cardRouter = require("../routes/card.routes");
 
 const { connect } = require("../database/connect.database");
+const terminal = require("../middlewares/terminal.middlewares");
 
 const app = express();
 
@@ -21,5 +22,7 @@ app.use("/api/workspace", workspaceRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/document", documentRouter);
 app.use("/api/card", cardRouter);
+
+app.use(terminal.log);
 
 module.exports = app;
