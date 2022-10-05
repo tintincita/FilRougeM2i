@@ -6,6 +6,13 @@ const { createCardEffect } = require("./create-card.effects");
 module.exports.createCard = (request, response) => {
   const card = new Card(getBody(Card.modelName, request));
 
+  // The number of runned effects must be set manually in create-card.effects.js.
+  // This surely can be improved.
+  if (createCardEffect.Document.effects === 2) {
+    createCardEffect.Document.outlinerCards(card, card.id, card.document);
+    createCardEffect.Document.editorCards(card, card.id, card.document);
+  }
+
   createEntity(Card, card, response);
-  createCardEffect.Document.outlinerCards(card, card.id, card.document, response);
+
 };

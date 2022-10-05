@@ -3,6 +3,6 @@ Content-Type: application/json
 
 {
   "title": "Me Card",
-  "content": "custom",
+  "content": "dsadsada",
   "document": "633dbfef2e991952d51288da"
 }
