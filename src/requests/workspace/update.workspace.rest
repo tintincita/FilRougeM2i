@@ -1,0 +1,7 @@
+PUT  http://localhost:3001/api/workspace/633bf45d3eb9ed21d49c1c0a
+Content-Type: application/json
+
+{
+    "owner": "633bde1d736e301f411c0b27",
+    "title": "111"
+}

@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "./src/config/.env" });
+require("dotenv").config({ path: "./src/.env" });
 
 let PORT = process.env.PORT;
 const MONGO_URI =

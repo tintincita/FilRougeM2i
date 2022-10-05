@@ -1,0 +1,7 @@
+POST  http://localhost:3001/api/workspace
+Content-Type: application/json
+
+{
+    "owner": "633bde1d736e301f411c0b27",
+    "title": "dsadsa"
+}

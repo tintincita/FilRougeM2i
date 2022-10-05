@@ -1,0 +1,6 @@
+PUT  http://localhost:3001/api/project/633c294680dc03b8f63659d4
+Content-Type: application/json
+
+{
+    "title": "fini"
+}

@@ -11,6 +11,7 @@ const cardSchema = mongoose.Schema(
     document: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
+      required: true,
     },
     group: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,13 +22,5 @@ const cardSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
-cardSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
 
 module.exports = mongoose.model("Card", cardSchema);

@@ -1,8 +1,0 @@
-POST  http://localhost:3001/api/group
-Content-Type: application/json
-
-{
-    "contains": ["6307820d831f26ba433fa609",
-      "63078217831f26ba433fa60d"],
-    "document": "63073baeea21e0c2acd42834"
-}

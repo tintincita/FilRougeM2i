@@ -1,10 +1,14 @@
 const cardRouter = require("express").Router();
-const cardController = require("../controllers/card.controller");
+const createCardController = require("../controllers/card/create.card.controller");
+const readCardController = require("../controllers/card/read.card.controller");
+const readCardsController = require("../controllers/card/read.cards.controller");
+const deleteCardController = require("../controllers/card/delete.card.controller");
+const updateCardController = require("../controllers/card/update.card.controller");
 
-cardRouter.get("/", cardController.getAllCards);
-cardRouter.get("/:id", cardController.getCardByID);
-cardRouter.post("/", cardController.createCard);
-cardRouter.put("/:id", cardController.updateCardByID);
-cardRouter.delete("/:id", cardController.deleteCardByID);
+cardRouter.get("/", readCardsController.getAllCards);
+cardRouter.get("/:id", readCardController.getCardByID);
+cardRouter.post("/", createCardController.createCard);
+cardRouter.put("/:id", updateCardController.updateCardByID);
+cardRouter.delete("/:id", deleteCardController.deleteCardByID);
 
 module.exports = cardRouter;

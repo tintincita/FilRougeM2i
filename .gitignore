@@ -3,6 +3,6 @@
 **/coverage
 **/.vscode
 
-.env
+src/.env
 
 .DS_Store

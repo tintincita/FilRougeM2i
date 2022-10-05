@@ -1,0 +1,7 @@
+POST  http://localhost:3001/api/card
+Content-Type: application/json
+
+{
+  "content": "",
+  "document": "633b23cf2d1bd4f2699b1aa0"
+}

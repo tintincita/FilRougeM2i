@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const documentSchema = mongoose.Schema({
+  workspace: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Workspace",
+    required: true,
+  },
   title: {
     type: String,
   },
@@ -16,24 +21,7 @@ const documentSchema = mongoose.Schema({
       ref: "Card",
     },
   ],
-  editorCardsAndGroups: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card" | "Group",
-    },
-  ],
-  parentSpace: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Document",
-  },
-});
 
-documentSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
 });
 
 module.exports = mongoose.model("Document", documentSchema);

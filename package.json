@@ -2,11 +2,11 @@
   "name": "proj",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "./src/server/http.server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node server.js",
-    "dev": "cross-env NODE_ENV=development nodemon server.js",
-    "devInTest": "cross-env NODE_ENV=test nodemon server.js",
+    "start": "cross-env NODE_ENV=production node ./src/server/http.server.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/server/http.server.js",
+    "devInTest": "cross-env NODE_ENV=test nodemon ./src/server/http.server.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
   },
   "repository": {

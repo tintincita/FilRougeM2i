@@ -1,1 +1,0 @@
-GET http://localhost:3001/api/group/633046538793b8b90b05f40e

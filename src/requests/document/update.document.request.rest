@@ -1,0 +1,6 @@
+PUT  http://localhost:3001/api/document/633c0e321a75b2e308077372
+Content-Type: application/json
+
+{
+      "title": "poiuic"
+}

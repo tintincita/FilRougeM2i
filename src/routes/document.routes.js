@@ -1,10 +1,14 @@
 const documentRouter = require("express").Router();
-const documentController = require("../controllers/document.controller");
+const readDocumentsController = require("../controllers/document/read.documents.controller");
+const readDocumentController = require("../controllers/document/read.document.controller");
+const createDocumentController = require("../controllers/document/create.document.controller");
+const deleteDocumentController = require("../controllers/document/delete.document.controller");
+const updateDocumentController = require("../controllers/document/update.document.controller");
 
-documentRouter.get("/", documentController.getAllDocuments);
-documentRouter.get("/:id", documentController.getDocumentByID);
-documentRouter.post("/", documentController.createDocument);
-documentRouter.put("/:id", documentController.updateDocumentByID);
-documentRouter.delete("/:id", documentController.deleteDocumentByID);
+documentRouter.get("/", readDocumentsController.getAllDocuments);
+documentRouter.get("/:id", readDocumentController.getDocumentByID);
+documentRouter.post("/", createDocumentController.createDocument);
+documentRouter.put("/:id", updateDocumentController.updateDocumentByID);
+documentRouter.delete("/:id", deleteDocumentController.deleteDocumentByID);
 
 module.exports = documentRouter;

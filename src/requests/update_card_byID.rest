@@ -1,6 +1,0 @@
-PUT  http://localhost:3001/api/card/6304e767bb9bdd06c7e1570b
-Content-Type: application/json
-
-{
-    "document": "6304e7653bec42199cea6651"
-}

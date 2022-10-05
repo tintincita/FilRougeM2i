@@ -1,6 +1,0 @@
-PUT  http://localhost:3001/api/document/63073baeea21e0c2acd42834
-Content-Type: application/json
-
-{
-    "editorCardsAndGroups": ["63073c0dea21e0c2acd42849", "63073be0ea21e0c2acd42842"]
-}
