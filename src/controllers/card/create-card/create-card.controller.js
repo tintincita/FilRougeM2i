@@ -14,5 +14,4 @@ module.exports.createCard = (request, response) => {
   }
 
   createEntity(Card, card, response);
-
 };
