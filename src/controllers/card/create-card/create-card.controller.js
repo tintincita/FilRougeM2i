@@ -7,5 +7,5 @@ module.exports.createCard = (request, response) => {
   const card = new Card(getBody(Card.modelName, request));
 
   createEntity(Card, card, response);
-  createCardEffect.Document.outlinerCards(card, card.document);
+  createCardEffect.Document.outlinerCards(card, card.id, card.document, response);
 };
