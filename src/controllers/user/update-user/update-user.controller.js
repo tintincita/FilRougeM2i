@@ -1,7 +1,7 @@
 const User = require("../../../models/user.model");
 const { Entity } = require("../../../structures/entities.structure");
-const { updateEntityByID } = require("../../.entity/update-entity.controller");
+const { updateEntity } = require("../../.entity/update-entity.controller");
 
 module.exports.updateUser = (request, response) => {
-  updateEntityByID(Entity.User, User, request, response);
+  updateEntity(Entity.User, User, request, response);
 };

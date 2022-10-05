@@ -1,6 +1,6 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.deleteEntityByID = async (entity, model, request, response) => {
+module.exports.deleteEntity = async (entity, model, request, response) => {
   try {
     const entityID = request.params.id;
     const entityToDelete = await model.findById(entityID);

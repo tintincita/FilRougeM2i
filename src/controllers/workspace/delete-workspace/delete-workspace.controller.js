@@ -1,7 +1,7 @@
 const Workspace = require("../../../models/workspace.model");
 const { Entity } = require("../../../structures/entities.structure");
-const { deleteEntityByID } = require("../../.entity/delete-entity.controller");
+const { deleteEntity } = require("../../.entity/delete-entity.controller");
 
 module.exports.deleteWorkspace = (request, response) => {
-  deleteEntityByID(Entity.Workspace, Workspace, request, response);
+  deleteEntity(Entity.Workspace, Workspace, request, response);
 };

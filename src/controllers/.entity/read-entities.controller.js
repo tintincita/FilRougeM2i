@@ -1,6 +1,6 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.getAllEntities = async (model, response) => {
+module.exports.readEntities = async (model, response) => {
   try {
     const entitiesToRead = await model.find({});
 

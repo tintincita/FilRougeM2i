@@ -1,6 +1,6 @@
 const User = require("../../../models/user.model");
-const { getAllEntities } = require("../../.entity/read-entities.controller");
+const { readEntities } = require("../../.entity/read-entities.controller");
 
 module.exports.readUsers = (request, response) => {
-  getAllEntities(User, response);
+  readEntities(User, response);
 };

@@ -1,6 +1,6 @@
 const { getBody } = require("../../structures/get-body.structure");
 
-module.exports.updateEntityByID = async (entity, model, request, response) => {
+module.exports.updateEntity = async (entity, model, request, response) => {
   try {
     const entityID = request.params.id;
     await model.findByIdAndUpdate(entityID, getBody(entity, request));

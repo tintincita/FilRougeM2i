@@ -1,6 +1,6 @@
 const Workspace = require("../../../models/workspace.model");
-const { getAllEntities } = require("../../.entity/read-entities.controller");
+const { readEntities } = require("../../.entity/read-entities.controller");
 
 module.exports.readWorkspaces = (request, response) => {
-  getAllEntities(Workspace, response);
+  readEntities(Workspace, response);
 };
