@@ -1,6 +1,7 @@
 const Card = require("../../models/card.model");
-const { getEntityByID } = require("../entity/read.entity.controller");
+const { Entity } = require("../../structures/entities.structure");
+const { getEntityByID } = require("../.entity/read-entity.controller");
 
 module.exports.getCardByID = (request, response) => {
-  getEntityByID(Card, request, response);
+  getEntityByID(Entity.Card, Card, request, response);
 };

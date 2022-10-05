@@ -1,4 +1,4 @@
-const { getBody } = require("../../bodies/entities.body");
+const { getBody } = require("../../structures/get-body.structure");
 
 module.exports.createEntity = (entity, model, request, response) => {
   const newEntity = new model(getBody(entity, request));

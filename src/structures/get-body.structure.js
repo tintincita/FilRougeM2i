@@ -1,4 +1,4 @@
-const { Entity } = require("../entities/list.entities");
+const { Entity } = require("./entities.structure");
 
 module.exports.getBody = (entity, request) => {
   if (entity === Entity.User)
@@ -22,7 +22,7 @@ module.exports.getBody = (entity, request) => {
       workspace: request.body.workspace,
       title: request.body.title || "Project",
       documents: request.body.documents || [],
-    }
+    };
 
   if (entity === Entity.Document)
     return {

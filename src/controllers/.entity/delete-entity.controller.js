@@ -1,4 +1,4 @@
-const message = require("../../messages/delete_entity_by_id.message");
+const message = require("../../structures/messages.structure");
 
 module.exports.deleteEntityByID = async (entity, model, request, response) => {
   try {

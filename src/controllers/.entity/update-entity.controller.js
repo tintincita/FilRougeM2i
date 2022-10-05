@@ -1,4 +1,4 @@
-const { getBody } = require("../../bodies/entities.body");
+const { getBody } = require("../../structures/get-body.structure");
 
 module.exports.updateEntityByID = async (entity, model, request, response) => {
   try {
