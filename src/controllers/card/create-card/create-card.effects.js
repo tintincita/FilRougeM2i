@@ -6,7 +6,7 @@ const Document = require("../../../models/document.model");
 
 module.exports.createCardEffect = {
   Document: {
-    effects: 1,
+    effects: 2,
     effectsCounter: 0,
 
     outlinerCards: async (entity, entityID, documentID) => {
@@ -28,7 +28,7 @@ module.exports.createCardEffect = {
           }
 
           if (this.createCardEffect.Document.effectsCounter === effects) {
-            document.__v = __v;
+            document.__v = __v + 1;
             await document.save();
             this.createCardEffect.Document.effectsCounter = 0;
           }
@@ -56,7 +56,7 @@ module.exports.createCardEffect = {
           }
 
           if (this.createCardEffect.Document.effectsCounter === effects) {
-            document.__v = __v;
+            document.__v = __v + 1;
             await document.save();
             this.createCardEffect.Document.effectsCounter = 0;
           }

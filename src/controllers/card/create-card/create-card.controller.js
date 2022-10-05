@@ -8,9 +8,9 @@ module.exports.createCard = (request, response) => {
 
   // The number of runned effects must be set manually in create-card.effects.js.
   // This surely can be improved.
-  if (createCardEffect.Document.effects === 1) {
+  if (createCardEffect.Document.effects === 2) {
     createCardEffect.Document.outlinerCards(card, card.id, card.document);
-    // createCardEffect.Document.editorCards(card, card.id, card.document);
+    createCardEffect.Document.editorCards(card, card.id, card.document);
   }
 
   createEntity(Card, card, response);
