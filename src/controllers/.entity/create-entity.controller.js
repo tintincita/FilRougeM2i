@@ -1,9 +1,9 @@
 const { message } = require("../../structures/messages.structure");
 
-module.exports.createEntity = (model, entity, response) => {
+module.exports.createEntity = async (model, entity, response) => {
   try {
     if (entity) {
-      model.create(entity, (error, newEntity) => {
+      await model.create(entity, (error, newEntity) => {
         if (error) {
           response
             .status(500)

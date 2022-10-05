@@ -6,6 +6,6 @@ const { createCardEffect } = require("./create-card.effects");
 module.exports.createCard = (request, response) => {
   const card = new Card(getBody(Card.modelName, request));
 
-  createCardEffect.Document.outlinerCards();
   createEntity(Card, card, response);
+  createCardEffect.Document.outlinerCards(card, card.document);
 };
