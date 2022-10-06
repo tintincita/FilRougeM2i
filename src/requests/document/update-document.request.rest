@@ -2,5 +2,5 @@ PUT  http://localhost:3001/api/document/633e8a1f70189da112264713
 Content-Type: application/json
 
 {
-  "outlinerCards" : ["633ea10cb58499e04e13c4f0", "633ea10db58499e04e13c4f4"]
+  "outlinerCards" : ["633eb444f0812b4b3595d9ba", "633eb445f0812b4b3595d9be", "633eb448f0812b4b3595d9c2"]
 }
