@@ -8,7 +8,7 @@ module.exports.readEntity = async (model, request, response) => {
     if (entityToRead) {
       response.send(entityToRead);
     } else {
-      response.status(404).send(message.error.readEntity(entity, entityID));
+      response.status(404).send(message.error.readEntity(model, entityID));
     }
   } catch (error) {
     response.status(500).send(error);
