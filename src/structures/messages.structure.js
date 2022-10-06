@@ -14,6 +14,9 @@ module.exports.message = {
     readEntity: (modelName, entityID) => {
       return `Error: ${modelName} not found: "${entityID}".`;
     },
+    updateEntity: (modelName, entityID) => {
+      return `Error: ${modelName} can't be updated: "${entityID}".`;
+    },    
     deleteEntity: (modelName, entityID) => {
       return `Error: ${modelName} can't be deleted: "${entityID}".`;
     },

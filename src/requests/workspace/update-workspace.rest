@@ -1,7 +1,7 @@
-PUT  http://localhost:3001/api/workspace/633bf45d3eb9ed21d49c1c0a
+PUT  http://localhost:3001/api/workspace/633dbfba2e991952d51288d6
 Content-Type: application/json
 
 {
     "owner": "633bde1d736e301f411c0b27",
-    "title": "111"
+    "title": "NEW"
 }

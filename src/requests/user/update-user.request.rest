@@ -1,6 +1,6 @@
-PUT  http://localhost:3001/api/user/633d540615ea39a7742e4e4a
+PUT  http://localhost:3001/api/user/633dbfa42e991952d51288d4
 Content-Type: application/json
 
 {
-    "firstName": "AlainJS"
+    "firstName": "CoralieJS"
 }
