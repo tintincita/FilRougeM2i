@@ -10,7 +10,7 @@ To run the server :
 
 - Open a terminal at the root of the repository.  
 - Run the `'npm i'` command
-- Request the `.env` file from the repository owner and put it into `'/src/config/'`
+- Request the `.env` file from the repository owner and put it into `'/src'`
 - Run the `'npm start'` command
 
 Get and run the frontend application available at https://github.com/tintincita/FilRougeM2i-Front
