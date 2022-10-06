@@ -8,5 +8,5 @@ module.exports.createCard = (request, response) => {
   const card = new Card(getBody(Card.modelName, request));
 
   createEntity(Card, card, response);
-  createCardEffects(Entity.Document, card.document, card.id);
+  createCardEffects(Entity.Document, card, card.document, card.id);
 };

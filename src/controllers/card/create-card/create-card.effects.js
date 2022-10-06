@@ -1,19 +1,31 @@
 const { Entity } = require("../../../structures/entities.structure");
 const Document = require("../../../models/document.model");
+
+// The use of a terminal log is required here.
+// Only one response can be send to the client,
+// in our case the final response is send from the entity controller.
 const terminal = require("../../../middlewares/terminal.middlewares");
 
-module.exports.createCardEffects = async (entity, documentID, cardID) => {
-  if (entity === Entity.Document) {
+module.exports.createCardEffects = async (
+  modelName,
+  entity,
+  documentID,
+  cardID
+) => {
+  if (modelName === Entity.Document && entity) {
     try {
       documentID = documentID.toString();
       const document = await Document.findById(documentID);
 
       if (document) {
         document.outlinerCards = document.outlinerCards.concat(cardID);
+
         document.editorCards = document.editorCards.concat(cardID);
+
+        // Document save can only be done once per request
         document.save();
       } else {
-        terminal.log("Document not found");
+        terminal.log(message.error.readEntity(modelName, documentID));
       }
     } catch (error) {
       terminal.log(error);
