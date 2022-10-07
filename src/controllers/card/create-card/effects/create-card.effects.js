@@ -1,33 +1,23 @@
-const { Entity } = require("../../../structures/entities.structure");
-const Document = require("../../../models/document.model");
+const Document = require("../../../../models/document.model");
+const { Entity } = require("../../../../structures/entities.structure");
+const { documentOutlinerCards } = require("./document.outliner-cards.effect");
+const { documentEditorCards } = require("./document.editor-cards.effect");
 
 // The use of a terminal log is required here.
 // Only one response can be send to the client,
 // in our case the final response is send from the entity controller.
-const terminal = require("../../../middlewares/terminal.middlewares");
-const { message } = require("../../../structures/messages.structure");
+const terminal = require("../../../../middlewares/terminal.middlewares");
+const { message } = require("../../../../structures/messages.structure");
 
-module.exports.createCardEffects = async (
-  modelName,
-  entity,
-  documentID,
-  cardID
-) => {
-  if (modelName === Entity.Document && entity) {
-    try {
+module.exports.createCardEffects = async (entity, documentID, cardID) => {
+  try {
+    if (entity) {
       documentID = documentID.toString();
       const document = await Document.findById(documentID);
 
       if (document) {
-        document.outlinerCards = document.outlinerCards.concat(cardID);
-        terminal.log(
-          message.success.fieldUpdate(Document.modelName, "outlinerCards")
-        );
-
-        document.editorCards = document.editorCards.concat(cardID);
-        terminal.log(
-          message.success.fieldUpdate(Document.modelName, "outlinerCards")
-        );
+        documentOutlinerCards(Entity.Document, document, cardID);
+        documentEditorCards(Entity.Document, document, cardID);
 
         // Document save can only be done once per request
         document.save();
@@ -35,9 +25,9 @@ module.exports.createCardEffects = async (
       } else {
         terminal.log(message.error.readEntity(modelName, documentID));
       }
-    } catch (error) {
-      terminal.log(error);
     }
+  } catch (error) {
+    terminal.log(error);
   }
 };
 
