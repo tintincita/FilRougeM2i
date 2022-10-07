@@ -1,5 +1,4 @@
 const Document = require("../../../models/document.model");
-const Card = require("../../../models/card.model");
 const { Entity } = require("../../../structures/entities.structure");
 
 // The use of a terminal log is required here.

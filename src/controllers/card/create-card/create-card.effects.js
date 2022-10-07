@@ -5,6 +5,7 @@ const Document = require("../../../models/document.model");
 // Only one response can be send to the client,
 // in our case the final response is send from the entity controller.
 const terminal = require("../../../middlewares/terminal.middlewares");
+const { message } = require("../../../structures/messages.structure");
 
 module.exports.createCardEffects = async (
   modelName,
@@ -19,11 +20,18 @@ module.exports.createCardEffects = async (
 
       if (document) {
         document.outlinerCards = document.outlinerCards.concat(cardID);
+        terminal.log(
+          message.success.fieldUpdate(Document.modelName, "outlinerCards")
+        );
 
         document.editorCards = document.editorCards.concat(cardID);
+        terminal.log(
+          message.success.fieldUpdate(Document.modelName, "outlinerCards")
+        );
 
         // Document save can only be done once per request
         document.save();
+        //
       } else {
         terminal.log(message.error.readEntity(modelName, documentID));
       }
