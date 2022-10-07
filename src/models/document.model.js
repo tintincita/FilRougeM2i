@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const documentSchema = mongoose.Schema({
-  // workspace: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "Workspace",
-  //   required: true,
-  // },
+  workspace: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Workspace",
+    required: true,
+  },
   title: {
     type: String,
   },

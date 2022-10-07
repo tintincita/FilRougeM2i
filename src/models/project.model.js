@@ -5,7 +5,6 @@ const projectSchema = mongoose.Schema(
     workspace: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Workspace",
-      required: true,
     },
     title: {
       type: String,

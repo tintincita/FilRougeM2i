@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const workspaceSchema = mongoose.Schema(
   {
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
+      unique: true,
     },
     title: {
       type: String,
