@@ -1,7 +1,10 @@
 module.exports.message = {
   success: {
     deleteEntity: (modelName, entity) => {
-      return `Success: ${modelName} deleted: ${entity}`;
+      return `Success: ${modelName} deleted: "${entity}".`;
+    },
+    deleteEntities: (modelName, numberOfEntities) => {
+      return `Success: ${numberOfEntities} ${modelName}s deleted.`;
     },
   },
   error: {
@@ -19,6 +22,9 @@ module.exports.message = {
     },    
     deleteEntity: (modelName, entityID) => {
       return `Error: ${modelName} can't be deleted: "${entityID}".`;
+    },
+    deleteEntities: (modelName) => {
+      return `Error: ${modelName}s can't be deleted.`;
     },
   },
 };
