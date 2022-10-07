@@ -16,8 +16,8 @@ module.exports.createCardEffects = async (entity) => {
       const document = await Document.findById(documentID);
 
       if (document) {
-        documentOutlinerCards(Entity.Document, document, entity._id);
-        documentEditorCards(Entity.Document, document, entity._id);
+        documentOutlinerCards(document, entity._id);
+        documentEditorCards(document, entity._id);
 
         // Document save can only be done once per request
         document.save();

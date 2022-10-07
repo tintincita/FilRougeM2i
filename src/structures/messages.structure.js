@@ -6,8 +6,8 @@ module.exports.message = {
     deleteEntities: (modelName, numberOfEntities) => {
       return `Success: ${numberOfEntities} ${modelName}s deleted.`;
     },
-    fieldUpdate: (fieldName, modelName) => {
-      return `Success: Field ${fieldName} in ${modelName} updated.`;
+    fieldUpdate: (context, modelName, fieldName, modelName) => {
+      return `Success: ${context} ${modelName} : Field ${fieldName} in ${modelName} updated.`;
     },
   },
   error: {
