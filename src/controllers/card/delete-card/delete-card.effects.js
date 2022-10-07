@@ -12,30 +12,26 @@ module.exports.deleteCardEffects = async (modelName, request) => {
   try {
     if (modelName === Entity.Document) {
       const cardID = request.params.id;
-      const card = await Card.findById(cardID);
 
-      const documentID = card.document.toString();
-      const document = await Document.findById(documentID);
+      await Document.updateOne(
+        { outlinerCards: cardID },
+        { $pull: { outlinerCards: cardID } }
+      );
+      terminal.log(
+        message.success.fieldUpdate(Document.modelName, "outlinerCards")
+      );
 
-      if (document) {
-        await document.updateOne(
-          { outlinerCards: cardID },
-          { $pull: { outlinerCards: cardID } }
-        );
-        terminal.log(
-          message.success.fieldUpdate(document.modelName, "outlinerCards")
-        );
+      await Document.updateOne(
+        { editorCards: cardID },
+        { $pull: { editorCards: cardID } }
+      );
+      terminal.log(
+        message.success.fieldUpdate(Document.modelName, "outlinerCards")
+      );
 
-        await document.updateOne(
-          { editorCards: cardID },
-          { $pull: { editorCards: cardID } }
-        );
-        terminal.log(message.success.fieldUpdate(document.modelName, "outlinerCards"));
-
-        // Document save can only be done once per request.
-        document.save();
-        //
-      }
+      // Document save can only be done once per request.
+      document.save();
+      //
     }
   } catch (error) {
     terminal.log(error);
