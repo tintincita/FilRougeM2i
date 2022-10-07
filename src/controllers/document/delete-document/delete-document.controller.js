@@ -4,8 +4,6 @@ const { deleteEntity } = require("../../.entity/delete-entity.controller");
 const { deleteDocumentEffects } = require("./delete-document.effects");
 
 module.exports.deleteDocument = async (request, response) => {
-  const documentID = request.params.id;
-
-  deleteEntity(Document, documentID, response);
-  deleteDocumentEffects(Entity.Card, documentID);
+  deleteEntity(Document, request, response);
+  deleteDocumentEffects(Entity.Card, request);
 };

@@ -7,9 +7,10 @@ const { message } = require("../../../structures/messages.structure");
 // in our case the final response is send from the entity controller.
 const terminal = require("../../../middlewares/terminal.middlewares");
 
-module.exports.deleteDocumentEffects = async (modelName, documentID) => {
+module.exports.deleteDocumentEffects = async (modelName, request) => {
   try {
     if (modelName === Entity.Card) {
+      const documentID = request.params.id;
       const deletedCards = await Card.deleteMany({ document: documentID });
       if (deletedCards.deletedCount > 0) {
         terminal.log(
