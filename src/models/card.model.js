@@ -12,10 +12,6 @@ const cardSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
       required: true,
-    },
-    group: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Group",
     }
   },
   {
