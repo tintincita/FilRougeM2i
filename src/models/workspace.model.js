@@ -2,10 +2,9 @@ const mongoose = require("mongoose");
 
 const workspaceSchema = mongoose.Schema(
   {
-    owner: {
+    user: {
       type: String,
       required: true,
-      unique: true,
     },
     title: {
       type: String,
