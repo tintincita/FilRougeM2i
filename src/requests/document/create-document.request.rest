@@ -2,6 +2,6 @@ POST  http://localhost:3001/api/document
 Content-Type: application/json
 
 {
-  "workspace": "633fcc000143e8618c61487c",
+  "project": "633fcc000143e8618c61487c",
   "title": "Me Document"
 }

@@ -1,7 +1,7 @@
 const { documentOutlinerCards } = require("./document.outliner-cards.effect");
 const {
   documentEditorCards,
-} = require("../effects/document.editor-cards.effect");
+} = require("./document.editor-cards.effect");
 
 // The use of a terminal log is required here.
 // Only one response can be send to the client,

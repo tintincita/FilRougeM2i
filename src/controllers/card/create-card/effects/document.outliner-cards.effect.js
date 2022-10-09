@@ -5,8 +5,17 @@ const terminal = require("../../../../middlewares/terminal.middlewares");
 const { message } = require("../../../../structures/messages.structure");
 
 module.exports.documentOutlinerCards = (entity, cardID) => {
-  entity.outlinerCards = entity.outlinerCards.concat(cardID);
-  terminal.log(
-    message.success.fieldUpdate(CRUD.Create, Card.modelName,"outlinerCards", Document.modelName)
-  );
+  try {
+    entity.outlinerCards = entity.outlinerCards.concat(cardID);
+    terminal.log(
+      message.success.fieldUpdate(
+        CRUD.Create,
+        Card.modelName,
+        "outlinerCards",
+        Document.modelName
+      )
+    );
+  } catch (error) {
+    terminal.log(error);
+  }
 };

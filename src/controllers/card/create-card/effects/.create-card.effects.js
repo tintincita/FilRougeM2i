@@ -1,5 +1,4 @@
 const Document = require("../../../../models/document.model");
-const { Entity } = require("../../../../structures/entities.structure");
 const { documentOutlinerCards } = require("./document.outliner-cards.effect");
 const { documentEditorCards } = require("./document.editor-cards.effect");
 

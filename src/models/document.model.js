@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const documentSchema = mongoose.Schema({
-  workspace: {
+  project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Workspace",
+    ref: "Project",
     required: true,
   },
   title: {

@@ -26,7 +26,7 @@ module.exports.getBody = (entity, request) => {
 
   if (entity === Entity.Document)
     return {
-      workspace: request.body.workspace,
+      project: request.body.project,
       title: request.body.title,
       outlinerCards: request.body.outlinerCards,
       editorCards: request.body.editorCards,

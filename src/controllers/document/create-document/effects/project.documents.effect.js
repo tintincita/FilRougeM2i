@@ -1,21 +1,22 @@
 const Document = require("../../../../models/document.model");
-const Card = require("../../../../models/card.model");
-const { CRUD } = require("../../../../structures/crud.structure");
+const Project = require("../../../../models/project.model");
+const {CRUD} = require("../../../../structures/crud.structure");
+
 const terminal = require("../../../../middlewares/terminal.middlewares");
 const { message } = require("../../../../structures/messages.structure");
 
-module.exports.documentEditorCards = (entity, cardID) => {
+module.exports.projectDocuments = async (project, documentID) => {
   try {
-    entity.editorCards = entity.editorCards.concat(cardID);
+    project.documents = project.documents.concat(documentID);
     terminal.log(
       message.success.fieldUpdate(
         CRUD.Create,
-        Card.modelName,
-        "editorCards",
-        Document.modelName
+        Document.modelName,
+        "documents",
+        Project.modelName
       )
     );
   } catch (error) {
     terminal.log(error);
   }
-};
+}
