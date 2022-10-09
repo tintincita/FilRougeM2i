@@ -14,9 +14,9 @@ module.exports.createProjectEffects = async (entity) => {
       const workspaceID = entity.workspace.toString();
       const workspace = await Workspace.findById(workspaceID);
 
-      if (workspace) {
-        const projectID = entity._id.toString();
+      const projectID = entity._id.toString();
 
+      if (workspace) {
         workspaceProjects(workspace, projectID);
 
         // Document save can only be done once per request
