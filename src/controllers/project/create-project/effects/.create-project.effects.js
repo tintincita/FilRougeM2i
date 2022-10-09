@@ -1,6 +1,6 @@
 const Project = require("../../../../models/project.model");
 const Workspace = require("../../../../models/workspace.model");
-const { workspaceProjects } = require("./workspace.projects.effects");
+const { workspaceProjects } = require("./workspace.projects.effect");
 
 // The use of a terminal log is required here.
 // Only one response can be send to the client,
