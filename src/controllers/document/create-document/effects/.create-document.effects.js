@@ -1,3 +1,4 @@
+const Document = require("../../../../models/document.model");
 const Project = require("../../../../models/project.model");
 const { projectDocuments } = require("../effects/project.documents.effect");
 
@@ -12,9 +13,10 @@ module.exports.createDocumentEffects = async (entity) => {
     if (entity) {
       const projectID = entity.project.toString();
       const project = await Project.findById(projectID);
+      
+      const documentID = entity._id.toString();
 
       if (project) {
-        const documentID = entity._id.toString();
 
         projectDocuments(project, documentID);
 
@@ -22,7 +24,7 @@ module.exports.createDocumentEffects = async (entity) => {
         project.save();
         //
       } else {
-        terminal.log(message.error.readEntity(modelName, documentID));
+        terminal.log(message.error.readEntity(Document.modelName, documentID));
       }
     }
   } catch (error) {
