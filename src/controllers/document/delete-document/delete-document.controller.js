@@ -1,7 +1,8 @@
 const Document = require("../../../models/document.model");
-const { Entity } = require("../../../structures/entities.structure");
 const { deleteEntity } = require("../../.entity/delete-entity.controller");
+const { deleteDocumentEffects } = require("./effects/.delete-document.effects");
 
-module.exports.deleteDocument = (request, response) => {
-  deleteEntity(Entity.Document, Document, request, response);
+module.exports.deleteDocument = async (request, response) => {
+  deleteEntity(Document, request, response);
+  deleteDocumentEffects(request);
 };

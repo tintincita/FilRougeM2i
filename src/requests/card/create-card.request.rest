@@ -2,7 +2,7 @@ POST  http://localhost:3001/api/card
 Content-Type: application/json
 
 {
-  "title": "ww",
-  "content": "dsadsada",
-  "document": "633e8a1f70189da112264713"
+  "document": "6342e7b3d404627d7a6f3d7c",
+  "title": "Me Card",
+  "content": "dsadsada"
 }

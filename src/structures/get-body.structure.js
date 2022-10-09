@@ -8,11 +8,12 @@ module.exports.getBody = (entity, request) => {
       userName: request.body.userName,
       email: request.body.email,
       password: request.body.password,
+      workspaces: request.body.workspaces,
     };
 
   if (entity === Entity.Workspace)
     return {
-      owner: request.body.owner,
+      user: request.body.user,
       title: request.body.title,
       projects: request.body.projects,
     };
@@ -26,7 +27,7 @@ module.exports.getBody = (entity, request) => {
 
   if (entity === Entity.Document)
     return {
-      workspace: request.body.workspace,
+      project: request.body.project,
       title: request.body.title,
       outlinerCards: request.body.outlinerCards,
       editorCards: request.body.editorCards,
