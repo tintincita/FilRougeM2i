@@ -7,7 +7,7 @@ module.exports.createEntity = async (model, entity, response) => {
         if (error) {
           response
             .status(500)
-            .send(message.error.createEntity(model.modelName));
+            .send(message.error.createEntity(model.modelName, error));
         } else {
           response.send(newEntity);
         }
