@@ -11,8 +11,8 @@ module.exports.message = {
     },
   },
   error: {
-    createEntity: (modelName) => {
-      return `Error: Can't create ${modelName}.`;
+    createEntity: (modelName, error) => {
+      return `Error: Can't create ${modelName}. ${error}`;
     },
     readEntities: (modelName) => {
       return `Error: ${modelName}s not found.`;
