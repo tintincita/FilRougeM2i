@@ -19,7 +19,7 @@ module.exports.updateEntity = async (model, request, response) => {
       } else {
         response
           .status(400)
-          .send(message.error.updateEntity(model.modelName, entityID));
+          .send(message.error.updateEntity(model.modelName, entityID, error));
       }
     } else {
       const updatedEntity = await model.findByIdAndUpdate(
@@ -35,7 +35,7 @@ module.exports.updateEntity = async (model, request, response) => {
       } else {
         response
           .status(400)
-          .send(message.error.updateEntity(model.modelName, entityID));
+          .send(message.error.updateEntity(model.modelName, entityID, error));
       }
     }
   } catch (error) {

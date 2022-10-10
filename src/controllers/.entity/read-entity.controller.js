@@ -14,7 +14,7 @@ module.exports.readEntity = async (model, request, response) => {
       if (entityToRead) {
         response.send(entityToRead);
       } else {
-        response.status(404).send(message.error.readEntity(model, entityID));
+        response.status(404).send(message.error.readEntity(model, entityID, error));
       }
     } else {
       const entityToRead = await model.findById(entityID);
@@ -22,7 +22,7 @@ module.exports.readEntity = async (model, request, response) => {
       if (entityToRead) {
         response.send(entityToRead);
       } else {
-        response.status(404).send(message.error.readEntity(model, entityID));
+        response.status(404).send(message.error.readEntity(model, entityID, error));
       }
     }
   } catch (error) {

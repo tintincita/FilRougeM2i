@@ -13,7 +13,7 @@ module.exports.createEntity = async (model, entity, response) => {
         }
       });
     } else {
-      response.status(500).send(message.error.readEntity(model.modelName, entity.id));
+      response.status(500).send(message.error.readEntity(model.modelName, entity.id, error));
     }
   } catch (error) {
     response.status(500).send(error);

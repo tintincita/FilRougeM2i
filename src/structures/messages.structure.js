@@ -14,20 +14,20 @@ module.exports.message = {
     createEntity: (modelName, error) => {
       return `Error: Can't create ${modelName}. ${error}`;
     },
-    readEntities: (modelName) => {
-      return `Error: ${modelName}s not found.`;
+    readEntities: (modelName, error) => {
+      return `Error: ${modelName}s not found. ${error}`;
     },
-    readEntity: (modelName, entityID) => {
-      return `Error: ${modelName} not found: "${entityID}".`;
+    readEntity: (modelName, entityID, error) => {
+      return `Error: ${modelName} not found: "${entityID}". ${error}`;
     },
-    updateEntity: (modelName, entityID) => {
-      return `Error: ${modelName} can't be updated: "${entityID}".`;
+    updateEntity: (modelName, entityID, error) => {
+      return `Error: ${modelName} can't be updated: "${entityID}". ${error}`;
     },    
-    deleteEntity: (modelName, entityID) => {
-      return `Error: ${modelName} can't be deleted: "${entityID}".`;
+    deleteEntity: (modelName, entityID, error) => {
+      return `Error: ${modelName} can't be deleted: "${entityID}". ${error}`;
     },
-    deleteEntities: (modelName) => {
-      return `Error: ${modelName}s can't be deleted.`;
+    deleteEntities: (modelName, error) => {
+      return `Error: ${modelName}s can't be deleted. ${error}`;
     },
   },
 };
