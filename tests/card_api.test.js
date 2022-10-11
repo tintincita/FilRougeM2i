@@ -1,10 +1,14 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const app = require('../src/config/app')
+const app = require('../src/app/app')
 
 const Card = require('../src/models/card.model')
-const Group = require('../src/models/group.model')
 const Document = require('../src/models/document.model')
+// const Project = require('../src/models/project.model')
+// const Workspace = require('../src/models/workspace.model')
+
+const initialCards = require('./data/cards.json')
+const initialDocuments = require('./data/documents.json')
 
 const helper = require('./test_helper')
 
@@ -13,26 +17,10 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Card.deleteMany({})
+  await Document.deleteMany({})
 
-  let docObject = new Document()
-  let cardObject = new Card()
-  let doc = await docObject.save()
-  let savedCard = new Card()
-
-  for (let i = 0; i < helper.initialCards.length; i++) {
-    cardObject = new Card(helper.initialCards[i])
-    cardObject.document = doc.id
-    savedCard = await cardObject.save()
-    doc.outlinerCards.push(savedCard.id)
-    doc.editorCards.push(savedCard.id)
-    doc.editorCardsAndGroups.push(savedCard.id)
-  }
-  await Document.findByIdAndUpdate(doc.id, 
-    {outlinerCards:doc.outlinerCards, 
-      editorCards:doc.editorCards, 
-      editorCardsAndGroups:doc.editorCardsAndGroups}, 
-    { new: true })
-
+  await Card.insertMany(initialCards)
+  await Document.insertMany(initialDocuments)
 })
 
 test('cards are returned as json', async () => {
@@ -59,7 +47,7 @@ test('unexisting id returns error', async () => {
 test('all initial cards are loaded', async () => {
   const response = await api.get('/api/card')
 
-  expect(response.body).toHaveLength(helper.initialCards.length)
+  expect(response.body).toHaveLength(initialCards.length)
 })
 
 test('a specific card can be viewed', async () => {
