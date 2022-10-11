@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const app = require('../src/config/app')
+const app = require('../src/app/app')
 
 const Document = require('../src/models/document.model')
 const Card = require('../src/models/card.model')

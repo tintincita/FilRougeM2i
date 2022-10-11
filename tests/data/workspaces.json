@@ -1,0 +1,32 @@
+[
+    {
+      "_id": "634520fad5f94329f97ea12f",
+      "user": "6343ceada988d4eee609c818",
+      "title": "New Workspace1",
+      "projects": [
+        "634538d2d5f94329f97ea383",
+        "634543cfd5f94329f97ea51a"
+      ],
+      "createdAt": "2022-10-11T07:53:30.424Z",
+      "updatedAt": "2022-10-11T10:22:07.432Z",
+      "__v": 2
+    },
+    {
+      "_id": "63452123d5f94329f97ea135",
+      "user": "6343ceada988d4eee609c818",
+      "title": "New Workspace2",
+      "projects": [],
+      "createdAt": "2022-10-11T07:54:11.874Z",
+      "updatedAt": "2022-10-11T09:35:54.481Z",
+      "__v": 0
+    },
+    {
+      "_id": "634538f4d5f94329f97ea389",
+      "user": "6343ceada988d4eee609c818",
+      "title": "New Workspace3",
+      "projects": [],
+      "createdAt": "2022-10-11T09:35:48.389Z",
+      "updatedAt": "2022-10-11T09:35:56.792Z",
+      "__v": 0
+    }
+  ]
