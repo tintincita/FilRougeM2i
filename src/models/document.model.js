@@ -9,6 +9,9 @@ const documentSchema = mongoose.Schema({
   title: {
     type: String,
   },
+  description: {
+    type: String,
+  },
   outlinerCards: [
     {
       type: mongoose.Schema.Types.ObjectId,
