@@ -39,6 +39,8 @@ module.exports.getBody = (entity, request) => {
     return {
       title: request.body.title,
       content: request.body.content,
+      outliner: request.body.outliner,
+      editor: request.body.editor,
       document: request.body.document,
     };
 };

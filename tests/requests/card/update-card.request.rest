@@ -1,7 +1,17 @@
-PUT  http://localhost:3001/api/card/633ea10cb58499e04e13c4f0
+PUT  http://localhost:3001/api/card/634567a338f76846f0f93eb5
 Content-Type: application/json
 
 {
-    "title": "NEW",
-    "content": "000"
+    "title": "Card",
+    "content": "Me Card",
+    "outliner": {
+      "style": {
+        "display": "plop"
+      }
+    },
+    "editor": {
+      "style": {
+        "display": "mop"
+      }
+    }
 }
