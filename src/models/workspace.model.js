@@ -9,6 +9,9 @@ const workspaceSchema = mongoose.Schema(
     title: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     projects: [
       {
         type: mongoose.Schema.Types.ObjectId,

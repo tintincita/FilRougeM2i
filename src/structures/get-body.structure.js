@@ -15,6 +15,7 @@ module.exports.getBody = (entity, request) => {
     return {
       user: request.body.user,
       title: request.body.title,
+      description: request.body.description,
       projects: request.body.projects,
     };
 
@@ -22,6 +23,7 @@ module.exports.getBody = (entity, request) => {
     return {
       workspace: request.body.workspace,
       title: request.body.title,
+      description: request.body.description,
       documents: request.body.documents,
     };
 
