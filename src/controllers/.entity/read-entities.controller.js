@@ -6,9 +6,9 @@ module.exports.readEntities = async (model, response) => {
     if (entities) {
       response.json(entities);
     } else {
-      response.status(500).json(message.error.readEntities(model.modelName, error));
+      response.status(400).json(message.error.readEntities(model.modelName, error));
     }
   } catch (error) {
-    response.status(500).send(error);
+    response.status(404).send(error);
   }
 };
