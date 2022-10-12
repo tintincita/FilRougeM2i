@@ -6,6 +6,6 @@ module.exports.deleteEntity = async (model, request, response) => {
     await model.findByIdAndRemove(entityID);
     response.status(204).send(message.success.deleteEntity(model.modelName, entityID));
   } catch (error) {
-    response.status(500).send(error);
+    response.status(404).send(error);
   }
 };
