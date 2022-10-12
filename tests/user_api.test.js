@@ -3,12 +3,12 @@ const supertest = require("supertest");
 const app = require("../src/app/app");
 
 const Card = require("../src/models/card.model");
-const Document = require("../src/models/document.model");
+const User = require("../src/models/user.model");
 // const Project = require('../src/models/project.model')
 // const Workspace = require('../src/models/workspace.model')
 
 const initialCards = require("./data/cards.json");
-const initialDocuments = require("./data/documents.json");
+const initialUsers = require("./data/users.json");
 
 const helper = require("./test_helper");
 
@@ -16,22 +16,22 @@ const api = supertest(app);
 
 beforeEach(async () => {
   await Card.deleteMany({});
-  await Document.deleteMany({});
+  await User.deleteMany({});
 
   await Card.insertMany(initialCards);
-  await Document.insertMany(initialDocuments);
+  await User.insertMany(initialUsers);
 });
 
-test("documents are returned as json", async () => {
+test("users are returned as json", async () => {
   await api
-    .get("/api/document")
+    .get("/api/user")
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
 
 test("malformatted id returns error", async () => {
   await api
-    .get("/api/document/88")
+    .get("/api/user/88")
     // current model throws 500. change try catch on .entity controller to get 404, etc
     // .expect(400)
     .expect(500);
@@ -40,28 +40,28 @@ test("malformatted id returns error", async () => {
 test("unexisting id returns error", async () => {
   let id = helper.nonExistingCardId();
   await api
-    .get(`/api/document/${id}`)
+    .get(`/api/user/${id}`)
     // current model throws 500. change try catch on .entity controller to get 404, etc
     // .expect(400)
     .expect(500);
 });
 
-test("all initial documents are loaded", async () => {
-  const response = await api.get("/api/document");
+test("all initial users are loaded", async () => {
+  const response = await api.get("/api/user");
 
-  expect(response.body).toHaveLength(initialDocuments.length);
+  expect(response.body).toHaveLength(initialUsers.length);
 });
 
-test("a specific document can be viewed", async () => {
-  const DocumentsAtStart = await helper.cardsInDb();
-  const DocumentToView = DocumentsAtStart[0];
+test("a specific user can be viewed", async () => {
+  const UsersAtStart = await helper.cardsInDb();
+  const UserToView = UsersAtStart[0];
 
-  const resultDocument = await api
-    .get(`/api/document/${DocumentToView._id}`)
+  const resultUser = await api
+    .get(`/api/user/${UserToView._id}`)
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
-  const processedDocumentToView = JSON.parse(JSON.stringify(DocumentToView));
+  const processedUserToView = JSON.parse(JSON.stringify(UserToView));
 
-  expect(resultDocument.body).toEqual(processedDocumentToView);
+  expect(resultUser.body).toEqual(processedUserToView);
 });

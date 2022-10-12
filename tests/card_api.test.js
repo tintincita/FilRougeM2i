@@ -1,68 +1,70 @@
-const mongoose = require('mongoose')
-const supertest = require('supertest')
-const app = require('../src/app/app')
+const mongoose = require("mongoose");
+const supertest = require("supertest");
+const app = require("../src/app/app");
 
-const Card = require('../src/models/card.model')
-const Document = require('../src/models/document.model')
+const Card = require("../src/models/card.model");
+const Document = require("../src/models/document.model");
 // const Project = require('../src/models/project.model')
 // const Workspace = require('../src/models/workspace.model')
 
-const initialCards = require('./data/cards.json')
-const initialDocuments = require('./data/documents.json')
+const initialCards = require("./data/cards.json");
+const initialDocuments = require("./data/documents.json");
 
-const helper = require('./test_helper')
+const helper = require("./test_helper");
 
-const api = supertest(app)
-
+const api = supertest(app);
 
 beforeEach(async () => {
-  await Card.deleteMany({})
-  await Document.deleteMany({})
+  await Card.deleteMany({});
+  await Document.deleteMany({});
 
-  await Card.insertMany(initialCards)
-  await Document.insertMany(initialDocuments)
-})
+  await Card.insertMany(initialCards);
+  await Document.insertMany(initialDocuments);
+});
 
-test('cards are returned as json', async () => {
+test("cards are returned as json", async () => {
   await api
-    .get('/api/card')
+    .get("/api/card")
     .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
+    .expect("Content-Type", /application\/json/);
+});
 
-test('malformatted id returns error', async () => {
+test("malformatted id returns error", async () => {
   await api
+
     .get('/api/card/88')
     .expect(404)
 })
 
-test('unexisting id returns error', async () => {
+test("unexisting id returns error", async () => {
   let id = helper.nonExistingCardId();
   await api
     .get(`/api/card/${id}`)
+
     .expect(404)
 })
 
 
-test('all initial cards are loaded', async () => {
-  const response = await api.get('/api/card')
+test("all initial cards are loaded", async () => {
+  const response = await api.get("/api/card");
 
-  expect(response.body).toHaveLength(initialCards.length)
-})
+  expect(response.body).toHaveLength(initialCards.length);
+});
 
-test('a specific card can be viewed', async () => {
-  const cardsAtStart = await helper.cardsInDb()
-  const cardToView = cardsAtStart[0]
+test("a specific card can be viewed", async () => {
+  const cardsAtStart = await helper.cardsInDb();
+  const cardToView = cardsAtStart[0];
 
   const resultCard = await api
     .get(`/api/card/${cardToView._id}`)
     .expect(200)
-    .expect('Content-Type', /application\/json/)
+    .expect("Content-Type", /application\/json/);
 
-  const processedCardToView = JSON.parse(JSON.stringify(cardToView))
+  const processedCardToView = JSON.parse(JSON.stringify(cardToView));
 
-  expect(resultCard.body).toEqual(processedCardToView)
-})
+  expect(resultCard.body).toEqual(processedCardToView);
+});
+
 
 describe('DELETE card', () => {
   test('a card can be deleted', async () => {
@@ -72,7 +74,9 @@ describe('DELETE card', () => {
       .delete(`/api/card/${cardToDelete._id}`)
       .expect(204)
 
-    const cardsAtEnd = await helper.cardsInDb()
+
+    const cardsAtEnd = await helper.cardsInDb();
+
 
     expect(cardsAtEnd).toHaveLength(
       initialCards.length - 1
@@ -97,11 +101,9 @@ describe('DELETE card', () => {
 
 })
 
-test('a card can be updated', async () => {
-  const cardsAtStart = await helper.cardsInDb()
-
-  const cardToChange = cardsAtStart[0]
-
+test("a card can be updated", async () => {
+  const cardsAtStart = await helper.cardsInDb();
+  const cardToChange = cardsAtStart[0];
   const changesToCard = {
     content: 'CONTENT of card is changed through PUT',
   }
@@ -112,9 +114,9 @@ test('a card can be updated', async () => {
     .expect(202)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/card')
 
-  const contents = response.body.map(r => r.content)
+  const response = await api.get("/api/card");
+  const contents = response.body.map((r) => r.content);
 
   expect(contents).toEqual(expect.arrayContaining(
     ['CONTENT of card is changed through PUT']))
@@ -122,5 +124,5 @@ test('a card can be updated', async () => {
 
 afterAll(async () => {
   await Card.deleteMany({});
-  mongoose.connection.close()
-})
+  mongoose.connection.close();
+});
