@@ -15,7 +15,7 @@ module.exports.updateEntity = async (model, request, response) => {
         .populate("editorCards");
 
       if (updatedEntity) {
-        response.json(updatedEntity);
+        response.status(204).json(updatedEntity);
       } else {
         response
           .status(400)
@@ -31,7 +31,7 @@ module.exports.updateEntity = async (model, request, response) => {
       );
 
       if (updatedEntity) {
-        response.json(updatedEntity);
+        response.status(202).json(updatedEntity);
       } else {
         response
           .status(400)
