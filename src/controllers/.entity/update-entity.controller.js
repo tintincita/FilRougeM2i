@@ -7,32 +7,31 @@ module.exports.updateEntity = async (model, request, response) => {
     const entityID = request.params.id;
 
     if (model.modelName === Entity.Document) {
-      const updatedEntity = await model
-        .findByIdAndUpdate(entityID, getBody(model.modelName, request), {
-          new: true,
-        })
-        .populate("outlinerCards")
-        .populate("editorCards");
+      try {
+        const updatedEntity = await model
+          .findByIdAndUpdate(entityID, getBody(model.modelName, request), {
+            new: true,
+          })
+          .populate("outlinerCards")
+          .populate("editorCards");
 
-      if (updatedEntity) {
-        response.status(204).json(updatedEntity);
-      } else {
+        response.status(202).json(updatedEntity);
+      } catch (error) {
         response
           .status(400)
           .send(message.error.updateEntity(model.modelName, entityID, error));
       }
     } else {
-      const updatedEntity = await model.findByIdAndUpdate(
-        entityID,
-        getBody(model.modelName, request),
-        {
-          new: true,
-        }
-      );
-
-      if (updatedEntity) {
+      try {
+        const updatedEntity = await model.findByIdAndUpdate(
+          entityID,
+          getBody(model.modelName, request),
+          {
+            new: true,
+          }
+        );
         response.status(202).json(updatedEntity);
-      } else {
+      } catch (error) {
         response
           .status(400)
           .send(message.error.updateEntity(model.modelName, entityID, error));
