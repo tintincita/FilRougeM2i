@@ -81,11 +81,11 @@ describe('DELETE card', () => {
     const cardsAtEnd = await helper.cardsInDb()
 
     expect(cardsAtEnd).toHaveLength(
-      helper.initialCards.length - 1
+      initialCards.length - 1
     )
 
-    const contents = cardsAtEnd.map(r => r.content)
-    expect(contents).not.toContain(cardToDelete.content)
+    const ids = cardsAtEnd.map(r => r._id)
+    expect(ids).not.toContain(cardToDelete._id)
   })
 
   test('parent document is updated', async () => {
@@ -93,8 +93,9 @@ describe('DELETE card', () => {
     const cardToDelete = cardsAtStart[0]
 
     await api
-      .delete(`/api/card/${cardToDelete.id}`)
-      .expect(204)
+      .delete(`/api/card/${cardToDelete._id}`)
+      // .expect(204)
+      .expect(200)
 
     const parentDoc = await Document.findById(cardToDelete.document)
 
@@ -102,58 +103,19 @@ describe('DELETE card', () => {
     expect(parentDoc.editorCards).not.toContain(cardToDelete._id)
   })
 
-  test('if deleted card in group. group and document are updated', async () => {
-    // setting initial conditions
-    const cardsAtStart = await helper.cardsInDb()
-    let parentDoc = await Document.findById(cardsAtStart[0].document)
-    console.log("parentDoc", parentDoc)
-
-    const cardsToGroup = cardsAtStart.slice(0, 3)
-    const ids = cardsToGroup.map((card) => card.id)
-
-    const newGroup = {
-      contains: ids,
-      document: cardsToGroup[0].document
-    }
-
-    const groupResponse = await api.post(`/api/group`).send(newGroup)
-    parentDoc = await Document.findById(parentDoc.id)
-    const groupId = groupResponse.body.id
-    let containingGroup = await Group.findById(groupId)
-    console.log("containingGroup before delete", containingGroup);
-    console.log("parentDoc list, before delete", parentDoc.editorCardsAndGroups);
-
-    // action
-    const cardToDelete = cardsToGroup[0]
-    console.log(cardToDelete);
-    console.log(cardToDelete.id);
-    await api.delete(`/api/card/${cardToDelete.id}`).expect(204)
-
-    //expected conditions
-    containingGroup = await Group.findById(groupId)
-    parentDoc = await Document.findById(parentDoc.id)
-
-    console.log("contianingGroup after delete", containingGroup.contains);
-    console.log("parentDoc list, after delete", parentDoc.editorCardsAndGroups);
-    // expect(containingGroup.contains)
-  })
-
-  test('if said group has only one card it becomes a card', () => {
-    // if group contains only one card => group deleted
-  })
 })
 
-test('a card can be updated', async () => {
+test.only('a card can be updated', async () => {
   const cardsAtStart = await helper.cardsInDb()
 
   const cardToChange = cardsAtStart[0]
 
   const changesToCard = {
-    content: 'title of card is changed through POST',
+    content: 'CONTENT of card is changed through PUT',
   }
 
   await api
-    .put(`/api/card/${cardToChange.id}`)
+    .put(`/api/card/${cardToChange._id}`)
     .send(changesToCard)
     .expect(200)
     .expect('Content-Type', /application\/json/)
@@ -162,9 +124,8 @@ test('a card can be updated', async () => {
 
   const contents = response.body.map(r => r.content)
 
-  expect(contents).toContain(
-    'title of card is changed through POST'
-  )
+  expect(contents).toEqual(expect.arrayContaining(
+    ['CONTENT of card is changed through PUT']))
 })
 
 afterAll(async () => {
