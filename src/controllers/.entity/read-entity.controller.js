@@ -6,22 +6,21 @@ module.exports.readEntity = async (model, request, response) => {
     const entityID = request.params.id;
 
     if (model.modelName === Entity.Document) {
-      const entityToRead = await model
-        .findById(entityID)
-        .populate("outlinerCards")
-        .populate("editorCards");
+      try {
+        const entityToRead = await model
+          .findById(entityID)
+          .populate("outlinerCards")
+          .populate("editorCards");
 
-      if (entityToRead) {
         response.send(entityToRead);
-      } else {
+      } catch(error) {
         response.status(404).send(message.error.readEntity(model, entityID, error));
       }
     } else {
-      const entityToRead = await model.findById(entityID);
-
-      if (entityToRead) {
+      try {
+        const entityToRead = await model.findById(entityID);
         response.send(entityToRead);
-      } else {
+      } catch(error) {
         response.status(404).send(message.error.readEntity(model, entityID, error));
       }
     }

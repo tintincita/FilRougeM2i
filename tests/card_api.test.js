@@ -31,20 +31,19 @@ test("cards are returned as json", async () => {
 
 test("malformatted id returns error", async () => {
   await api
-    .get("/api/card/88")
-    // current model throws 500. change try catch on .entity controller to get 404, etc
-    // .expect(400)
-    .expect(500);
-});
+
+    .get('/api/card/88')
+    .expect(404)
+})
 
 test("unexisting id returns error", async () => {
   let id = helper.nonExistingCardId();
   await api
     .get(`/api/card/${id}`)
-    // current model throws 500. change try catch on .entity controller to get 404, etc
-    // .expect(400)
-    .expect(500);
-});
+
+    .expect(404)
+})
+
 
 test("all initial cards are loaded", async () => {
   const response = await api.get("/api/card");
@@ -66,99 +65,62 @@ test("a specific card can be viewed", async () => {
   expect(resultCard.body).toEqual(processedCardToView);
 });
 
-describe("DELETE card", () => {
-  test("a card can be deleted", async () => {
-    const cardsAtStart = await helper.cardsInDb();
-    const cardToDelete = cardsAtStart[0];
-    console.log(cardToDelete);
-    console.log(cardToDelete._id);
-    await api.delete(`/api/card/${cardToDelete._id}`).expect(200);
+
+describe('DELETE card', () => {
+  test('a card can be deleted', async () => {
+    const cardsAtStart = await helper.cardsInDb()
+    const cardToDelete = cardsAtStart[0]
+    await api
+      .delete(`/api/card/${cardToDelete._id}`)
+      .expect(204)
+
 
     const cardsAtEnd = await helper.cardsInDb();
 
-    expect(cardsAtEnd).toHaveLength(helper.initialCards.length - 1);
 
-    const contents = cardsAtEnd.map((r) => r.content);
-    expect(contents).not.toContain(cardToDelete.content);
-  });
+    expect(cardsAtEnd).toHaveLength(
+      initialCards.length - 1
+    )
 
-  test("parent document is updated", async () => {
-    const cardsAtStart = await helper.cardsInDb();
-    const cardToDelete = cardsAtStart[0];
+    const ids = cardsAtEnd.map(r => r._id)
+    expect(ids).not.toContain(cardToDelete._id)
+  })
 
-    await api.delete(`/api/card/${cardToDelete.id}`).expect(204);
+  test('parent document is updated', async () => {
+    const cardsAtStart = await helper.cardsInDb()
+    const cardToUpdate = cardsAtStart[0]
 
-    const parentDoc = await Document.findById(cardToDelete.document);
+    await api
+      .delete(`/api/card/${cardToUpdate._id}`)
 
-    expect(parentDoc.outlinerCards).not.toContain(cardToDelete._id);
-    expect(parentDoc.editorCards).not.toContain(cardToDelete._id);
-  });
+    const parentDoc = await Document.findById(cardToUpdate.document)
 
-  test("if deleted card in group. group and document are updated", async () => {
-    // setting initial conditions
-    const cardsAtStart = await helper.cardsInDb();
-    let parentDoc = await Document.findById(cardsAtStart[0].document);
-    console.log("parentDoc", parentDoc);
+    expect(parentDoc.outlinerCards).not.toContain(cardToUpdate._id)
+    expect(parentDoc.editorCards).not.toContain(cardToUpdate._id)
+  })
 
-    const cardsToGroup = cardsAtStart.slice(0, 3);
-    const ids = cardsToGroup.map((card) => card.id);
-
-    const newGroup = {
-      contains: ids,
-      document: cardsToGroup[0].document,
-    };
-
-    const groupResponse = await api.post(`/api/group`).send(newGroup);
-    parentDoc = await Document.findById(parentDoc.id);
-    const groupId = groupResponse.body.id;
-    let containingGroup = await Group.findById(groupId);
-    console.log("containingGroup before delete", containingGroup);
-    console.log(
-      "parentDoc list, before delete",
-      parentDoc.editorCardsAndGroups
-    );
-
-    // action
-    const cardToDelete = cardsToGroup[0];
-    console.log(cardToDelete);
-    console.log(cardToDelete.id);
-    await api.delete(`/api/card/${cardToDelete.id}`).expect(204);
-
-    //expected conditions
-    containingGroup = await Group.findById(groupId);
-    parentDoc = await Document.findById(parentDoc.id);
-
-    console.log("contianingGroup after delete", containingGroup.contains);
-    console.log("parentDoc list, after delete", parentDoc.editorCardsAndGroups);
-    // expect(containingGroup.contains)
-  });
-
-  test("if said group has only one card it becomes a card", () => {
-    // if group contains only one card => group deleted
-  });
-});
+})
 
 test("a card can be updated", async () => {
   const cardsAtStart = await helper.cardsInDb();
-
   const cardToChange = cardsAtStart[0];
-
   const changesToCard = {
-    content: "title of card is changed through POST",
-  };
+    content: 'CONTENT of card is changed through PUT',
+  }
 
   await api
-    .put(`/api/card/${cardToChange.id}`)
+    .put(`/api/card/${cardToChange._id}`)
     .send(changesToCard)
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
+    .expect(202)
+    .expect('Content-Type', /application\/json/)
+
 
   const response = await api.get("/api/card");
-
   const contents = response.body.map((r) => r.content);
 
-  expect(contents).toContain("title of card is changed through POST");
-});
+  expect(contents).toEqual(expect.arrayContaining(
+    ['CONTENT of card is changed through PUT']))
+})
 
 afterAll(async () => {
   await Card.deleteMany({});
