@@ -32,18 +32,14 @@ test("documents are returned as json", async () => {
 test("malformatted id returns error", async () => {
   await api
     .get("/api/document/88")
-    // current model throws 500. change try catch on .entity controller to get 404, etc
-    // .expect(400)
-    .expect(500);
+    .expect(404);
 });
 
 test("unexisting id returns error", async () => {
   let id = helper.nonExistingCardId();
   await api
     .get(`/api/document/${id}`)
-    // current model throws 500. change try catch on .entity controller to get 404, etc
-    // .expect(400)
-    .expect(500);
+    .expect(404);
 });
 
 test("all initial documents are loaded", async () => {
